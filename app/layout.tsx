@@ -1,5 +1,16 @@
 import type { Metadata } from 'next'
+import { GeistSans } from 'geist/font/sans'
+import { Cormorant_Garamond } from 'next/font/google'
+import { LenisProvider } from '@/components/layout/LenisProvider'
 import './globals.css'
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Ostendere',
@@ -13,8 +24,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body style={{ backgroundColor: 'var(--background)' }}>{children}</body>
+    <html lang="en" className={`${GeistSans.variable} ${cormorant.variable}`}>
+      <body className="bg-background text-text-primary antialiased">
+        <LenisProvider>{children}</LenisProvider>
+      </body>
     </html>
   )
 }
