@@ -8,20 +8,18 @@ export function HeroScene() {
   const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
+    console.log('HeroScene mounted — canvas appended')
     const mount = mountRef.current
     if (!mount) return
 
-    // Fallback to window dimensions if layout hasn't committed yet
     const width = mount.clientWidth || window.innerWidth
     const height = mount.clientHeight || window.innerHeight
 
-    // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setClearColor(0x000000, 0)
 
-    // Position canvas to fill the mount div exactly
     const canvas = renderer.domElement
     canvas.style.position = 'absolute'
     canvas.style.top = '0'
@@ -29,12 +27,10 @@ export function HeroScene() {
     canvas.style.display = 'block'
     mount.appendChild(canvas)
 
-    // Scene & Camera
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
     camera.position.z = 10
 
-    // Suit structure planes — jacket front, shoulder line, lapel, depth, trouser seam
     const planeConfigs: Array<{
       w: number
       h: number
@@ -68,7 +64,6 @@ export function HeroScene() {
       meshes.push(mesh)
     }
 
-    // Mouse tilt
     const mouse = { x: 0, y: 0 }
     const target = { x: 0, y: 0 }
 
@@ -79,7 +74,6 @@ export function HeroScene() {
 
     window.addEventListener('mousemove', onMouseMove)
 
-    // Resize
     function onResize() {
       const w = mount!.clientWidth || window.innerWidth
       const h = mount!.clientHeight || window.innerHeight
@@ -90,7 +84,6 @@ export function HeroScene() {
 
     window.addEventListener('resize', onResize)
 
-    // Animation
     let frameId: number
 
     function animate() {
