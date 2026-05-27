@@ -11,15 +11,23 @@ export function HeroScene() {
     const mount = mountRef.current
     if (!mount) return
 
-    const width = mount.clientWidth
-    const height = mount.clientHeight
+    // Fallback to window dimensions if layout hasn't committed yet
+    const width = mount.clientWidth || window.innerWidth
+    const height = mount.clientHeight || window.innerHeight
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setClearColor(0x000000, 0)
-    mount.appendChild(renderer.domElement)
+
+    // Position canvas to fill the mount div exactly
+    const canvas = renderer.domElement
+    canvas.style.position = 'absolute'
+    canvas.style.top = '0'
+    canvas.style.left = '0'
+    canvas.style.display = 'block'
+    mount.appendChild(canvas)
 
     // Scene & Camera
     const scene = new THREE.Scene()
@@ -37,11 +45,11 @@ export function HeroScene() {
       ry: number
       opacity: number
     }> = [
-      { w: 3.2, h: 5.0, x: 0, y: 0.4, z: -2, rx: 0.04, ry: 0, opacity: 0.22 },
-      { w: 4.8, h: 0.08, x: 0, y: 2.2, z: -3, rx: 0, ry: 0.04, opacity: 0.16 },
-      { w: 1.6, h: 2.4, x: -1.1, y: 1.2, z: -4, rx: 0.08, ry: -0.12, opacity: 0.18 },
-      { w: 6.0, h: 7.0, x: 0, y: 0, z: -7, rx: 0, ry: 0, opacity: 0.07 },
-      { w: 1.2, h: 3.8, x: 0, y: -1.6, z: -5, rx: 0, ry: 0.06, opacity: 0.14 },
+      { w: 3.2, h: 5.0, x: 0,    y: 0.4,  z: -2, rx: 0.04, ry: 0,    opacity: 0.55 },
+      { w: 4.8, h: 0.08, x: 0,   y: 2.2,  z: -3, rx: 0,    ry: 0.04, opacity: 0.45 },
+      { w: 1.6, h: 2.4, x: -1.1, y: 1.2,  z: -4, rx: 0.08, ry: -0.12,opacity: 0.48 },
+      { w: 6.0, h: 7.0, x: 0,    y: 0,    z: -7, rx: 0,    ry: 0,    opacity: 0.22 },
+      { w: 1.2, h: 3.8, x: 0,    y: -1.6, z: -5, rx: 0,    ry: 0.06, opacity: 0.38 },
     ]
 
     const meshes: THREE.LineSegments[] = []
@@ -73,8 +81,8 @@ export function HeroScene() {
 
     // Resize
     function onResize() {
-      const w = mount!.clientWidth
-      const h = mount!.clientHeight
+      const w = mount!.clientWidth || window.innerWidth
+      const h = mount!.clientHeight || window.innerHeight
       camera.aspect = w / h
       camera.updateProjectionMatrix()
       renderer.setSize(w, h)
@@ -89,11 +97,9 @@ export function HeroScene() {
       frameId = requestAnimationFrame(animate)
 
       if (!prefersReducedMotion) {
-        // Slow drift
         scene.rotation.y += 0.0003
         scene.rotation.x += 0.0001
 
-        // Lerped mouse tilt
         target.x += (mouse.x * 0.08 - target.x) * 0.04
         target.y += (mouse.y * 0.08 - target.y) * 0.04
         scene.rotation.y += target.x * 0.01
@@ -114,8 +120,8 @@ export function HeroScene() {
         mesh.geometry.dispose()
         ;(mesh.material as THREE.Material).dispose()
       }
-      if (mount.contains(renderer.domElement)) {
-        mount.removeChild(renderer.domElement)
+      if (mount.contains(canvas)) {
+        mount.removeChild(canvas)
       }
     }
   }, [prefersReducedMotion])
@@ -123,7 +129,7 @@ export function HeroScene() {
   return (
     <div
       ref={mountRef}
-      className="absolute inset-0 w-full h-full"
+      className="absolute inset-0 z-0 h-full w-full"
       aria-hidden="true"
     />
   )
