@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0a0d1a;
+    --surface: #0f1428;
+    --border: #1e2440;
+    --silver: #C0C0C0;
+    --silver-light: #E8E8E8;
+    --platinum: #E5E4E2;
+    --text-primary: #F5F5F5;
+    --text-secondary: #A0A0A0;
+    --text-muted: #606060;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: auto; /* Lenis handles scroll — do not use CSS smooth scroll */
+    background-color: var(--background);
+    color: var(--text-primary);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: #C0C0C0;
+    color: #0a0d1a;
+  }
+}
