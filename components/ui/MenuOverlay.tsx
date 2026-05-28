@@ -8,17 +8,6 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ]
 
-const overlayVariants = {
-  closed: {
-    clipPath: 'circle(0% at 50% 100%)',
-    transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] as const },
-  },
-  open: {
-    clipPath: 'circle(150% at 50% 100%)',
-    transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] as const },
-  },
-}
-
 const listVariants = {
   closed: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
   open: { transition: { staggerChildren: 0.08, delayChildren: 0.25 } },
@@ -39,11 +28,11 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-navy"
-          variants={overlayVariants}
-          initial="closed"
-          animate="open"
-          exit="closed"
+          initial={{ clipPath: 'circle(0% at 50% 100%)' }}
+          animate={{ clipPath: 'circle(150% at 50% 100%)' }}
+          exit={{ clipPath: 'circle(0% at 50% 100%)' }}
+          transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-[#060810]"
           aria-modal="true"
           role="dialog"
           aria-label="Navigation menu"
@@ -70,7 +59,6 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
             </motion.ul>
           </nav>
 
-          {/* Subtle wordmark at bottom */}
           <motion.p
             className="absolute bottom-12 text-xs tracking-[0.4em] uppercase text-text-muted"
             variants={itemVariants}
