@@ -12,7 +12,7 @@ export function CelticNavTrigger({ onClick, isOpen }: CelticNavTriggerProps) {
       aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
       aria-expanded={isOpen}
       onClick={onClick}
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full [touch-action:manipulation] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver/60"
+      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center w-12 h-12 rounded-full [touch-action:manipulation] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver/60 [.lightbox-open_&]:hidden"
     >
       <svg
         viewBox="0 0 48 48"
