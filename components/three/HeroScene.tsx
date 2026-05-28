@@ -8,7 +8,6 @@ export function HeroScene() {
   const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
-    console.log('HeroScene mounted — canvas appended')
     const mount = mountRef.current
     if (!mount) return
 
@@ -41,11 +40,11 @@ export function HeroScene() {
       ry: number
       opacity: number
     }> = [
-      { w: 3.2, h: 5.0, x: 0,    y: 0.4,  z: -2, rx: 0.04, ry: 0,    opacity: 0.55 },
-      { w: 4.8, h: 0.08, x: 0,   y: 2.2,  z: -3, rx: 0,    ry: 0.04, opacity: 0.45 },
-      { w: 1.6, h: 2.4, x: -1.1, y: 1.2,  z: -4, rx: 0.08, ry: -0.12,opacity: 0.48 },
-      { w: 6.0, h: 7.0, x: 0,    y: 0,    z: -7, rx: 0,    ry: 0,    opacity: 0.22 },
-      { w: 1.2, h: 3.8, x: 0,    y: -1.6, z: -5, rx: 0,    ry: 0.06, opacity: 0.38 },
+      { w: 3.2, h: 5.0, x: 0,    y: 0.4,  z: -2, rx: 0.04, ry: 0,     opacity: 0.55 },
+      { w: 4.8, h: 0.08, x: 0,   y: 2.2,  z: -3, rx: 0,    ry: 0.04,  opacity: 0.45 },
+      { w: 1.6, h: 2.4, x: -1.1, y: 1.2,  z: -4, rx: 0.08, ry: -0.12, opacity: 0.48 },
+      { w: 6.0, h: 7.0, x: 0,    y: 0,    z: -7, rx: 0,    ry: 0,     opacity: 0.22 },
+      { w: 1.2, h: 3.8, x: 0,    y: -1.6, z: -5, rx: 0,    ry: 0.06,  opacity: 0.38 },
     ]
 
     const meshes: THREE.LineSegments[] = []
@@ -122,7 +121,7 @@ export function HeroScene() {
   return (
     <div
       ref={mountRef}
-      className="absolute inset-0 z-0 h-full w-full"
+      className="fixed inset-0 z-0 h-full w-full pointer-events-none"
       aria-hidden="true"
     />
   )
