@@ -93,6 +93,42 @@ Claude does this automatically — without being asked.
 - `npm run build` — CLEAN (Turbopack, static /, all routes pass)
 - `npm audit` — 18 moderate (Sanity CLI tooling only, runtime-safe, unchanged from Sprint 0)
 
+### Group 5 — Three.js Removal + Vercel Diagnostic
+**Problem:** Vercel preview — wordmark and Three.js scene permanently invisible. Dark background and Celtic trigger visible only.
+
+**Root cause confirmed via curl diagnostic:**
+- `BAILOUT_TO_CLIENT_SIDE_RENDERING` present in SSR HTML
+- All animated elements had `style="opacity:0"` baked into server HTML
+- Cause: `next/dynamic({ ssr: false })` inside a 'use client' page.tsx causes BailoutToCSR in React 19 concurrent rendering. React "adopts" server DOM (no fresh mount lifecycle). Framer Motion's `useLayoutEffect` never fires → opacity:0 permanent.
+
+**Architectural fix attempted:** page.tsx → Server Component; React.lazy + Suspense in a layout-level HeroSceneClient wrapper. Eliminated BailoutToCSR but visual still failed on Vercel preview.
+
+**Resolution:** Three.js dropped entirely. Hero background replaced with HTML5 video (see Group 6).
+
+**Files deleted:** `components/three/HeroScene.tsx`
+**Packages removed:** `three`, `@types/three`
+**Documentation:** Known-issues entry added with full BailoutToCSR post-mortem.
+
+### Group 6 — Video Hero Section
+**Files created/modified:**
+- `components/sections/HeroVideo.tsx` — Server Component, fixed full-screen HTML5 video (WebM first, MP4 fallback), dark overlay rgba(10,13,26,0.55), aria-hidden, z-index -2/-1
+- `components/sections/HeroContent.tsx` — rewritten: 100svh, content at 38vh, wordmark `clamp(1.8rem,7vw,6.5rem)` weight-300 tracking-[0.35em], brand statement "Precision. Craft. Distinction." tracking-[0.5em], looping scroll indicator (scaleY), `useReducedMotion` respected
+- `app/page.tsx` — Server Component: HeroVideo + HeroContent + HeroInteractive + 4 placeholder sections (#collection, #about, #services, #contact)
+- `public/images/hero-poster.jpg`, `public/videos/hero-bg.mp4`, `public/videos/hero-bg.webm` — hero assets committed
+
+**Key decisions:**
+- `HeroVideo` is a pure Server Component (no hooks needed — static HTML)
+- Video fixed position (`fixed inset-0`) sits behind all content via `[z-index:-2]`
+- Dark overlay at `[z-index:-1]` — allows content above at default z-index
+- WebM served first (851KB VP9) — better compression for modern browsers; MP4 fallback (1.2MB H.264)
+- Scroll indicator uses `times` array with Framer Motion keyframes for correct scaleY + translateY sequence
+
+**Quality check results:**
+- `npx tsc --noEmit` — CLEAN (0 errors)
+- `npm run build` — CLEAN (static /, all routes pass)
+- Diagnostic: 0 `BAILOUT_TO_CLIENT_SIDE_RENDERING` in SSR HTML — no BailoutToCSR
+- `opacity:0` instances in SSR HTML: expected Framer Motion initial-state SSR injection; client hydrates and animates correctly
+
 ---
 
 ## Sprint 2
