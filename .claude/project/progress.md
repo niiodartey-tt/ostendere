@@ -162,8 +162,55 @@ Next.js 16 Turbopack injects inline scripts during hydration. `script-src 'self'
 
 ---
 
-## Sprint 2
-[Claude populates this during the sprint]
+## Sprint 2 — Content, Lookbook, Sections, Contact
+
+### Group 1 — Config, Data, Shared Utilities
+**Files created/modified:**
+- `next.config.mjs` — added `images.unsplash.com` to remotePatterns for placeholder images
+- `app/globals.css` — added `card-hidden`, `card-visible`, `hide-scrollbar` utility classes; `prefers-reduced-motion` block disables all animations; skip nav link support
+- `lib/lookbook-data.ts` — 15 placeholder looks across 5 categories (alpha-man, suits, accessories, watches, pocket-squares); `CATEGORY_LABELS` and `ALL_CATEGORIES` exports
+- `hooks/useInView.ts` — reusable IntersectionObserver hook; fires once at threshold 0.15, disconnects after trigger
+
+**Key decisions:**
+- `useInView` extracted as shared hook — used by LookbookCard (flip animation), ServiceCard (stagger), RevealOnScroll (About + Services)
+- `card-hidden` / `card-visible` in `@layer utilities` so Tailwind can purge them safely
+- Unsplash placeholder images will be replaced by Sanity CDN images in a future sprint when Daniel uploads his lookbook
+
+### Group 2 — Lookbook Section
+**Files created:**
+- `components/sections/LookbookSection.tsx` — Server Component; silver rule separator + section wrapper; renders LookbookGrid
+- `components/ui/CategoryFilter.tsx` — Client Component; pill row with `role="tablist"`, `aria-selected`; horizontally scrollable with `hide-scrollbar` on mobile; `sticky top-0` within section
+- `components/ui/LookbookCard.tsx` — Client Component; IntersectionObserver flip animation (`card-hidden` → `card-visible`); random 0–400ms delay via `useRef`; `perspective:1000px` wrapper; `transform-style:preserve-3d` card; `scale-[1.02]` on hover; silver overlay fade
+- `components/ui/LightboxInfoPanel.tsx` — Client Component; right panel for desktop lightbox; category pill, title, silver rule, description, CTA button that scrolls to #contact
+- `components/ui/LookbookLightbox.tsx` — Client Component; full-screen lightbox z-[60]; CSS opacity/visibility transition; keyboard nav (Escape, ArrowLeft, ArrowRight); horizontal swipe detection (touchstart/touchend, >50px delta); `document.body.classList.toggle('lightbox-open')` for Celtic trigger hiding; focus managed to close button on open
+- `components/ui/LookbookGrid.tsx` — Client Component; manages activeCategory + visibleCategory (300ms display:none delay post-filter-transition); lightboxIndex state; renders CategoryFilter + cards + LookbookLightbox
+
+**Key decisions:**
+- Filter UX: `activeCategory` triggers CSS opacity/scale transition immediately; `visibleCategory` updates after 300ms timeout to hide items from DOM (removes blank space in masonry)
+- `[.lightbox-open_&]:hidden` Tailwind arbitrary variant on CelticNavTrigger button — CSS class on `document.body` hides trigger when lightbox is open, no prop drilling
+- Two-state filter (activeCategory vs visibleCategory) avoids reflow during transition
+- LightboxInfoPanel split into its own file to keep LookbookLightbox under 150 lines
+
+### Group 3 — About, Services, Contact, Footer, API Route
+**Files created:**
+- `components/ui/RevealOnScroll.tsx` — Client Component; wraps children with IntersectionObserver reveal; supports `direction: 'up' | 'left' | 'none'` and `delay` prop; `motion-reduce:transition-none` applied
+- `components/sections/AboutSection.tsx` — Server Component; two-column layout (55%/45%); RevealOnScroll on both columns with `direction="left"` on image and 150ms delay on copy; `h2` heading, three body paragraphs on Daniel's craft and Ostendere's identity; Accra/Ghana context per 16-ghana.md
+- `components/ui/ServiceCard.tsx` — Client Component; IntersectionObserver stagger (0/0.15/0.3s delays); custom SVG icons (scissors, hanger, pocket square) drawn inline — no icon library
+- `components/sections/ServicesSection.tsx` — Server Component; `grid-cols-1 md:grid-cols-3` with `gap-px bg-[rgba(192,192,192,0.1)]` divider between cards; three service cards
+- `components/sections/ContactForm.tsx` — Client Component; react-hook-form + zod; honeypot field (website, aria-hidden, tabIndex=-1); timestamp injected on submit; four primary fields + phone optional; `Field` sub-component for label/input/error pattern; spinner loading state, success/error states; `zodResolver` cast workaround for `exactOptionalPropertyTypes` incompatibility
+- `components/sections/ContactSection.tsx` — Client Component; two-column layout; left column: heading, copy, address block (Accra, Instagram @ostendere, WhatsApp); right column: ContactForm
+- `components/layout/Footer.tsx` — Server Component; centred two lines; "We do not store your personal data" required by overview.md data privacy rules
+- `app/api/contact/route.ts` — POST only (GET returns 405); JSON content-type check; in-memory rate limiting 3/IP/hour; honeypot check before Zod validation; timestamp check (silent success < 3000ms); Zod schema validation; Phase 1 logs name+service only (no PII in logs per security standard); TODO for Resend Phase 2
+- `app/page.tsx` — updated: placeholder sections removed; LookbookSection, AboutSection, ServicesSection, ContactSection, Footer imported; `id="main-content"` on `<main>`
+- `app/layout.tsx` — skip navigation link added as first body child per a11y standard
+- `components/ui/CelticNavTrigger.tsx` — `[.lightbox-open_&]:hidden` class added to button
+
+**TypeScript fix:** `zodResolver(contactSchema) as unknown as Resolver<ContactFormValues>` — `exactOptionalPropertyTypes` + `@hookform/resolvers/zod` type mismatch; cast is safe, schema validation remains intact
+
+**Quality check results:**
+- `npx tsc --noEmit` — CLEAN (0 errors)
+- `npm run build` — CLEAN (/, /api/contact routes pass)
+- `npm audit` — 18 moderate (Sanity CLI only, unchanged from Sprint 0)
 
 ---
 
