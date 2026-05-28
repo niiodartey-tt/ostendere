@@ -212,6 +212,38 @@ Next.js 16 Turbopack injects inline scripts during hydration. `script-src 'self'
 - `npm run build` — CLEAN (/, /api/contact routes pass)
 - `npm audit` — 18 moderate (Sanity CLI only, unchanged from Sprint 0)
 
+### Group 4 — Sprint 2 Refinement Pass
+**Files created:**
+- `hooks/useParallax.ts` — scroll parallax hook; disabled on `window.innerWidth < 768` and `prefers-reduced-motion`; passive scroll listener; `translateY` applied via `el.style.transform`
+- `components/ui/ParallaxBackground.tsx` — Client Component wrapper; accepts `speed` and `className` props; uses `useParallax` hook; renders as a `<div>`
+
+**Files modified:**
+- `next.config.mjs` — CSP `img-src` updated to include `plus.unsplash.com`; `plus.unsplash.com` added to remotePatterns
+- `lib/lookbook-data.ts` — extended `Look` interface with `fabric`, `craftsmanship`, `care` string fields; all 15 looks updated with correct menswear Unsplash IDs and specific detail values (mill names, construction techniques, care instructions)
+- `app/globals.css` — global smoothness: `body { -webkit-tap-highlight-color: transparent; text-rendering: optimizeLegibility }`; lightbox keyframes added (lbEnterFromRight, lbEnterFromLeft, lbExitToLeft, lbExitToRight, lbOpen, lbOverlayReveal); shimmer keyframe added; utility classes: `.lb-enter-right`, `.lb-enter-left`, `.lb-exit-left`, `.lb-exit-right`, `.lb-open`, `.lb-overlay-reveal`, `.shimmer`
+- `components/ui/LookbookLightbox.tsx` — complete rewrite as Option D; full-viewport backdrop; `object-contain` image centred; floating gradient overlay at bottom of image (desktop only); `font-display` on title + description; details grid (FABRIC/CRAFTSMANSHIP/CARE); mobile stacked layout with scrollable info panel below image; CSS image transitions via lb-* keyframe classes; `shownIdx` / `shownRef` state machine decouples displayed look from activeIndex for smooth exit-then-enter animation; swipe gesture preserved; keyboard nav preserved
+- `components/ui/LightboxInfoPanel.tsx` — deleted (functionality merged into LookbookLightbox floating overlay)
+- `components/sections/AboutSection.tsx` — `font-sans` → `font-display` on h2; `font-display` added to body copy div; ParallaxBackground wrapper (speed 0.15) on inner content div; `Africa&apos;s` entity fix
+- `components/ui/ServiceCard.tsx` — `font-sans` → `font-display` on h3; `font-display` added to description paragraph
+- `components/sections/ServicesSection.tsx` — ParallaxBackground wrapper (speed 0.1) on inner content div
+- `components/sections/ContactSection.tsx` — `font-sans` → `font-display` on h2; ParallaxBackground wrapper (speed 0.15) on inner content div
+- `components/sections/LookbookSection.tsx` — ParallaxBackground wrapper (speed 0.1) around LookbookGrid
+- `hooks/useLenis.ts` — `duration: 1.2 → 1.4`; `touchMultiplier: 1.5` added
+- `components/ui/LookbookCard.tsx` — `min-h-[300px]` on portrait cards, `min-h-[200px]` on square/landscape; `shimmer` class on loading skeleton div (shown until `onLoad` fires); `Math.random()` moved inside IntersectionObserver callback (removed from `useRef` initializer to fix `react-hooks/purity` lint rule)
+- `components/sections/ContactForm.tsx` — `useRef(Date.now()) → useRef(0)` with `useEffect` setter (fixes `react-hooks/purity`); `// eslint-disable-next-line react-hooks/refs` for `handleSubmit(onSubmit)` in JSX (known react-hook-form / React 19 lint rule false positive)
+
+**Key decisions:**
+- Lightbox Option D: floating overlay on the image itself (not a side panel). Simpler DOM, immersive, works at all viewport sizes. Mobile: image stacked above info panel with `overflow-y: auto` scroll.
+- ParallaxBackground as a Client Component imported by Server Component sections — valid React 19 pattern (Server Components can render Client Components).
+- HeroVideo skipped for parallax: `position: fixed` produces constant `getBoundingClientRect()` values — explicit parallax yields `offset = 0`. Fixed-position already creates natural depth as content scrolls over it.
+- `shownRef` resets to `null` on lightbox close so next open always plays `lb-open` animation.
+
+**Quality check results:**
+- `npx tsc --noEmit` — CLEAN (0 errors)
+- `eslint . --ext .ts,.tsx` — CLEAN (0 errors, 0 warnings)
+- `npm run build` — CLEAN (Turbopack; static `/`, dynamic `/api/contact`)
+- `npm audit` — 18 moderate (Sanity CLI only, runtime-safe, unchanged from Sprint 0)
+
 ---
 
 ## Sprint 3

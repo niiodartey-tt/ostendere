@@ -1,4 +1,5 @@
 import { ServiceCard } from '@/components/ui/ServiceCard'
+import ParallaxBackground from '@/components/ui/ParallaxBackground'
 
 function ScissorsIcon() {
   return (
@@ -42,7 +43,7 @@ export function ServicesSection() {
         aria-labelledby="services-label"
         className="relative z-[2] bg-[#0a0d1a] px-4 py-24 sm:px-8 lg:px-16 lg:py-32"
       >
-        <div className="mx-auto max-w-6xl">
+        <ParallaxBackground speed={0.1} className="mx-auto max-w-6xl">
           <p
             id="services-label"
             className="mb-16 text-xs tracking-[0.4em] uppercase text-text-muted"
@@ -76,7 +77,7 @@ export function ServicesSection() {
               delay={0.3}
             />
           </div>
-        </div>
+        </ParallaxBackground>
       </section>
     </>
   )

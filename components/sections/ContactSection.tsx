@@ -1,5 +1,6 @@
 'use client'
 import { ContactForm } from '@/components/sections/ContactForm'
+import ParallaxBackground from '@/components/ui/ParallaxBackground'
 
 export function ContactSection() {
   return (
@@ -11,7 +12,7 @@ export function ContactSection() {
         aria-labelledby="contact-heading"
         className="relative z-[2] bg-[#060810] px-4 py-24 sm:px-8 lg:px-16 lg:py-32"
       >
-        <div className="mx-auto max-w-6xl flex flex-col md:flex-row gap-16 lg:gap-24">
+        <ParallaxBackground speed={0.15} className="mx-auto max-w-6xl flex flex-col md:flex-row gap-16 lg:gap-24">
 
           {/* Left — heading + details */}
           <div className="w-full md:w-[45%] shrink-0">
@@ -21,7 +22,7 @@ export function ContactSection() {
 
             <h2
               id="contact-heading"
-              className="font-sans font-light text-[clamp(2rem,4vw,3.5rem)] leading-[1.1] text-[#E8E8E8]"
+              className="font-display font-light text-[clamp(2rem,4vw,3.5rem)] leading-[1.1] text-[#E8E8E8]"
             >
               Begin Your<br />
               Ostendere<br />
@@ -64,7 +65,7 @@ export function ContactSection() {
             <ContactForm />
           </div>
 
-        </div>
+        </ParallaxBackground>
       </section>
     </>
   )

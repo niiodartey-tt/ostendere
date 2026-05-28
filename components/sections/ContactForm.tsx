@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -48,7 +48,9 @@ const inputBase =
 
 export function ContactForm() {
   const [status, setStatus] = useState<FormStatus>('idle')
-  const mountTime = useRef(Date.now())
+  const mountTime = useRef(0)
+
+  useEffect(() => { mountTime.current = Date.now() }, [])
 
   const {
     register,
@@ -78,6 +80,7 @@ export function ContactForm() {
   }
 
   return (
+    // eslint-disable-next-line react-hooks/refs
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
       {/* Honeypot — hidden from real users */}
       <input

@@ -30,11 +30,11 @@ export function ServiceCard({ icon, title, description, ctaLabel, ctaHref, delay
         {icon}
       </div>
 
-      <h3 className="font-sans text-[1.1rem] font-light tracking-wide text-[#E8E8E8] mb-4">
+      <h3 className="font-display text-[1.1rem] font-light tracking-wide text-[#E8E8E8] mb-4">
         {title}
       </h3>
 
-      <p className="text-sm leading-[1.8] text-text-secondary flex-1 mb-8">
+      <p className="font-display text-sm leading-[1.8] text-text-secondary flex-1 mb-8">
         {description}
       </p>
 

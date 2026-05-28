@@ -1,4 +1,5 @@
 import { LookbookGrid } from '@/components/ui/LookbookGrid'
+import ParallaxBackground from '@/components/ui/ParallaxBackground'
 
 export function LookbookSection() {
   return (
@@ -11,7 +12,9 @@ export function LookbookSection() {
         aria-label="Collection"
         className="relative z-[2] bg-[#0a0d1a] pt-24 pb-32"
       >
-        <LookbookGrid />
+        <ParallaxBackground speed={0.1}>
+          <LookbookGrid />
+        </ParallaxBackground>
       </section>
     </>
   )

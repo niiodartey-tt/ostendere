@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { RevealOnScroll } from '@/components/ui/RevealOnScroll'
+import ParallaxBackground from '@/components/ui/ParallaxBackground'
 
 export function AboutSection() {
   return (
@@ -11,7 +12,7 @@ export function AboutSection() {
         aria-labelledby="about-heading"
         className="relative z-[2] bg-[#060810] px-4 py-24 sm:px-8 lg:px-16 lg:py-32"
       >
-        <div className="mx-auto max-w-6xl flex flex-col md:flex-row gap-12 md:gap-16 lg:gap-24 items-start">
+        <ParallaxBackground speed={0.15} className="mx-auto max-w-6xl flex flex-col md:flex-row gap-12 md:gap-16 lg:gap-24 items-start">
 
           {/* Left — portrait image */}
           <RevealOnScroll direction="left" className="w-full md:w-[55%] shrink-0">
@@ -34,16 +35,16 @@ export function AboutSection() {
 
             <h2
               id="about-heading"
-              className="font-sans font-light text-[clamp(2rem,4vw,3.5rem)] tracking-wide text-[#E8E8E8] leading-tight"
+              className="font-display font-light text-[clamp(2rem,4vw,3.5rem)] tracking-wide text-[#E8E8E8] leading-tight"
             >
               Daniel Cofie
             </h2>
 
             <div className="mt-6 mb-6 h-px w-15 bg-silver/40" aria-hidden="true" />
 
-            <div className="space-y-5 text-sm leading-[2] text-text-secondary max-w-[480px]">
+            <div className="space-y-5 font-display text-sm leading-[2] text-text-secondary max-w-[480px]">
               <p>
-                Daniel Cofie trained under some of West Africa's most rigorous master tailors before founding Ostendere in Accra. His work is shaped by a singular belief: that a well-made suit is not clothing — it is an argument for the man wearing it.
+                Daniel Cofie trained under some of West Africa&apos;s most rigorous master tailors before founding Ostendere in Accra. His work is shaped by a singular belief: that a well-made suit is not clothing — it is an argument for the man wearing it.
               </p>
               <p>
                 Every Ostendere garment begins with a conversation about the life it will be worn in. A board presentation in Accra, a wedding in London, a negotiation in Abuja. The suit must work as hard as the man who wears it. Precision is the only acceptable standard.
@@ -66,7 +67,7 @@ export function AboutSection() {
             </div>
           </RevealOnScroll>
 
-        </div>
+        </ParallaxBackground>
       </section>
     </>
   )
