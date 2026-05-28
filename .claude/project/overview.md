@@ -24,7 +24,7 @@
 | Framework | Next.js | 16 | App Router — single-page, all sections on homepage |
 | Language | TypeScript | Latest stable | Strict mode always |
 | Styling | Tailwind CSS | Latest stable | Utility-first |
-| 3D / Parallax | Three.js | Latest stable | Hero scene, section transition parallax — lazy loaded always |
+| Hero background | HTML5 video | — | Full-screen autoplay, muted, loop, playsInline — no Three.js |
 | Animation | Framer Motion | Latest stable | Section animations, menu overlay parallax reveal |
 | Animation | Lenis | Latest stable | Smooth scroll throughout — only scroll library used |
 | Animation | tailwindcss-animate | Latest stable | Simple UI states |
@@ -88,7 +88,7 @@
 | Contact form | High — sole user-input surface | Zod validation, rate limiting (3/IP/hour), honeypot, timestamp check |
 | Next.js API route `/api/contact` | High — processes input, forwards email | Server-side validation, input sanitisation, rate limiting, generic errors |
 | Sanity Studio `studio.ostendere.com` | Medium — CMS access | Sanity authentication, single authorised user, locked CORS origins |
-| Three.js / client-side bundle | Low | Bundled via npm (no external CDN), audited every sprint |
+| Video / client-side bundle | Low | Hero video served from `/public/video/` — no external CDN |
 | Vercel environment variables | Critical if exposed | No `NEXT_PUBLIC_` on secrets, `.env.local` never committed |
 | Sanity CDN | Low — public read only | Read-only, no write access from public site |
 
@@ -114,7 +114,7 @@
 ### Security Headers
 
 Configured in `next.config.js` and applied to all routes. Full CSP in `.claude/standards/12-security.md`:
-- `Content-Security-Policy` — `script-src 'self'` only (Three.js bundled, never loaded from CDN), Sanity CDN whitelisted for images and media
+- `Content-Security-Policy` — `script-src 'self'` only, Sanity CDN whitelisted for images and media; `media-src 'self'` covers local hero video
 - `X-Frame-Options: DENY` — site cannot be embedded in an iframe
 - `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
 - `X-Content-Type-Options: nosniff`
@@ -151,7 +151,7 @@ Configured in `next.config.js` and applied to all routes. Full CSP in `.claude/s
 
 Rules specific to Ostendere that extend or override the ApexSource standard:
 
-- Three.js hero scene must be dynamically imported — never block the initial page render or LCP
+- Hero background is a full-screen HTML5 `<video>` element — `autoPlay muted loop playsInline` — never using Three.js
 - All parallax and smooth scroll effects run through Lenis exclusively — never use any other scroll library or native scroll events alongside Lenis
 - Navigation is an animated Celtic SVG trigger at the bottom-centre of statement sections. On click it opens a full-screen menu overlay with Framer Motion parallax reveal. There is no traditional Navbar component.
 - All lookbook images served from Sanity CDN exclusively via `urlFor()` — never stored in or served from `/public`

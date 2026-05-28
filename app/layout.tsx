@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { Cormorant_Garamond } from 'next/font/google'
-import { HeroSceneClient } from '@/components/layout/HeroSceneClient'
 import { LenisProvider } from '@/components/layout/LenisProvider'
 import './globals.css'
 
@@ -27,7 +26,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${cormorant.variable}`}>
       <body className="bg-background text-text-primary antialiased">
-        <HeroSceneClient />
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
