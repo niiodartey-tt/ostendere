@@ -40,6 +40,55 @@ SPRINT:  Sprint N
 > Document every resolved bug here. Newest first.
 
 ---
+BUG:     CSP script-src 'unsafe-inline' added for development/staging — must be
+         replaced with nonce-based middleware CSP before Sprint 3 production launch
+CAUSE:   Next.js 16 Turbopack injects inline scripts during hydration. These scripts
+         were blocked by the strict "script-src 'self'" CSP, causing all JavaScript
+         to fail silently on Vercel preview. Hash-based approach is not viable because
+         Turbopack-generated inline script hashes change with every build.
+FIX:     Added 'unsafe-inline' and https://vercel.live to script-src temporarily.
+         Added wss://ws-us3.pusher.com and https://sockjs-us3.pusher.com to
+         connect-src for Vercel Live feedback websocket. This unblocks development
+         and staging. The site is not live on ostendere.com yet — risk is accepted
+         for Sprints 1–2 only.
+PREVENT: Sprint 3 task: implement nonce-based CSP middleware before production launch.
+         Next.js CSP nonce guide:
+         https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
+         Never merge to main (production) with 'unsafe-inline' in script-src.
+DATE:    28/05/2026
+SPRINT:  Sprint 1
+---
+
+---
+BUG:     Three.js hero scene invisible on Vercel preview despite clean local build
+CAUSE:   next/dynamic({ ssr: false }) inside a 'use client' page component throws
+         BailoutToCSR in React 19 concurrent rendering. The bailout propagates to
+         the route segment boundary (not just the Suspense around the dynamic
+         component). React 19 then "adopts" the server-rendered DOM rather than
+         fresh-mounting it. Framer Motion has already injected opacity:0 inline
+         styles during the SSR pass. Since there is no fresh mount lifecycle,
+         Framer Motion's useLayoutEffect never fires the animation to opacity:1.
+         All animated elements stay permanently invisible.
+         Confirmed via curl diagnostic: BAILOUT_TO_CLIENT_SIDE_RENDERING present
+         in HTML, all text elements had style="opacity:0" baked in server HTML.
+         next/dynamic({ ssr: false }) is also forbidden in Server Components
+         (layout.tsx) in Next.js 16 — it must live in a 'use client' file.
+         Architectural fix attempted (React.lazy + Suspense in a layout-level
+         Client Component wrapper) eliminated the bailout but visual output
+         still failed on Vercel preview.
+FIX:     Three.js dropped entirely. Hero background replaced with a full-screen
+         HTML5 video element (autoPlay muted loop playsInline). Zero architectural
+         complexity, more on-brand for a fashion house, no WebGL dependency.
+PREVENT: Do not use next/dynamic({ ssr: false }) inside any 'use client' route
+         segment component (page.tsx, layout.tsx). If a client-only library is
+         needed, isolate it in a dedicated Client Component wrapper using
+         React.lazy + Suspense, and confirm no BailoutToCSR via:
+         curl http://localhost:3000 | grep -o 'BAILOUT\|opacity:0'
+DATE:    28/05/2026
+SPRINT:  Sprint 1
+---
+
+---
 BUG:     10 high-severity CVEs flagged by npm audit during Sprint 0 stack install
 CAUSE:   next@14.2.35 (the originally specified version) falls within the vulnerable
          range next@9.3.4–16.3.0-canary.5. CVEs included DoS via Image Optimizer,

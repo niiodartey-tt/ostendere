@@ -1,12 +1,16 @@
 /** @type {import('next').NextConfig} */
 
+// TODO Sprint 3: Replace 'unsafe-inline' with nonce-based CSP before production launch on ostendere.com
+// See: https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
+// Next.js 16 Turbopack injects inline scripts during hydration — hash-based approach not viable
+// (hashes change per build). Nonce-based middleware is the correct production solution.
 const cspHeader = [
   "default-src 'self'",
-  "script-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://vercel.live",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' cdn.sanity.io data: blob:",
   "media-src 'self' cdn.sanity.io",
-  "connect-src 'self' api.sanity.io cdn.sanity.io",
+  "connect-src 'self' api.sanity.io cdn.sanity.io wss://ws-us3.pusher.com https://sockjs-us3.pusher.com",
   "frame-ancestors 'none'",
   "upgrade-insecure-requests",
 ].join("; ")

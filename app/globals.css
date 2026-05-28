@@ -23,12 +23,12 @@
 
   html {
     scroll-behavior: auto; /* Lenis handles scroll — do not use CSS smooth scroll */
-    background-color: var(--background);
+    background-color: var(--background); /* fallback shown before video loads */
     color: var(--text-primary);
   }
 
   body {
-    background-color: var(--background);
+    background-color: transparent; /* video is the background */
     color: var(--text-primary);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;

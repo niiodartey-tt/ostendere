@@ -44,7 +44,7 @@ These apply to every task, every session, every project. No exceptions.
 **Project:** Ostendere
 **Client:** Daniel Cofie
 **Domain:** ostendere.com (purchase — Sprint 0 task)
-**Stack:** Next.js 16 · TypeScript · Tailwind CSS · Three.js · Framer Motion · Lenis · Sanity v5 · Vercel
+**Stack:** Next.js 16 · TypeScript · Tailwind CSS · Framer Motion · Lenis · Sanity v5 · Vercel
 **Current sprint:** Sprint 0 — Project Setup
 **Active task:** Fill project documentation
 

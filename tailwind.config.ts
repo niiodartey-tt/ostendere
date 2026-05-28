@@ -40,6 +40,37 @@ const config: Config = {
         sans: ["var(--font-primary)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "serif"],
       },
+      keyframes: {
+        fadeUp: {
+          "0%": { opacity: "0", transform: "translateY(40px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        scaleX: {
+          "0%": { transform: "scaleX(0)" },
+          "100%": { transform: "scaleX(1)" },
+        },
+        scrollPulse: {
+          "0%, 100%": { transform: "scaleY(0)", opacity: "0" },
+          "50%": { transform: "scaleY(1)", opacity: "1" },
+        },
+        "celtic-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+      },
+      animation: {
+        "fade-up": "fadeUp 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both",
+        "fade-up-delay": "fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both",
+        "scale-x": "scaleX 0.8s ease-out 0.9s both",
+        "fade-in": "fadeIn 1s ease-out 0.5s both",
+        "scroll-pulse": "scrollPulse 2s ease-in-out 2s infinite",
+        "celtic-idle": "celtic-spin 12s linear infinite",
+        "celtic-fast": "celtic-spin 3s linear infinite",
+      },
     },
   },
   plugins: [tailwindcssAnimate],
