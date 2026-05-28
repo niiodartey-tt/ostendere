@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${cormorant.variable}`}>
-      <body className="bg-background text-text-primary antialiased">
+      <body className="text-text-primary antialiased">
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
