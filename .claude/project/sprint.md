@@ -106,6 +106,7 @@ Planned tasks:
 - [ ] Sitemap generated via next-sitemap
 - [ ] Core Web Vitals audit — all scores green on mobile (pagespeed.web.dev)
 - [ ] Mobile QA at 375px, 390px, 768px, 1280px
+- [ ] Security: implement nonce-based CSP middleware — replace 'unsafe-inline' in script-src before production launch (see known-issues.md — Sprint 1 CSP entry)
 - [ ] Security: `npm audit` — zero high or critical vulnerabilities
 - [ ] Security: all headers verified at securityheaders.com — A or A+ rating
 - [ ] Security: no secrets in git history — `git log --all --full-history -- .env*`
