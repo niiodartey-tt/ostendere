@@ -8,54 +8,41 @@
 
 ## Current Sprint
 
-**Sprint:** Sprint 0 — Project Setup
-**Started:** 27/05/2026
-**Target completion:** 28/05/2026
-**Branch:** `sprint-0`
-**Vercel preview:** [to be added once Vercel project is created]
+**Sprint:** Sprint 2 — Content, Lookbook, Sections, Contact
+**Started:** 28/05/2026
+**Target completion:** 11/06/2026
+**Branch:** `sprint-2`
+**Vercel preview:** [to be added once sprint-2 branch is deployed]
 
 ### Active Tasks
 
 | Task | Branch | Status |
 |---|---|---|
-| Fill .claude/project/ documentation | `task/documentation` | 🔄 In progress |
-| Create GitHub repository | `task/github-setup` | ⏳ Not started |
-| Create Vercel project and link to GitHub | `task/vercel-setup` | ⏳ Not started |
-| Create Sanity project and configure dataset | `task/sanity-setup` | ⏳ Not started |
-| Configure CORS origins in Sanity dashboard (ostendere.com, staging.ostendere.com, localhost:3000 only — no wildcard) | `task/sanity-setup` | ⏳ Not started |
-| Add Daniel's email as only Sanity project member — no other users | `task/sanity-setup` | ⏳ Not started |
-| Scaffold Next.js 16 — TypeScript, Tailwind, ESLint, App Router | `task/nextjs-scaffold` | ⏳ Not started |
-| Install ApexSource standard stack (Framer Motion, Lenis, Tailwind Animate, Three.js, Sanity, react-hook-form, zod, clsx, tailwind-merge, lucide-react, date-fns) | `task/stack-install` | ⏳ Not started |
-| Run npm audit after stack install — resolve any high or critical issues before Sprint 1 | `task/stack-install` | ⏳ Not started |
-| Configure tailwind.config.js with Ostendere colour tokens (dark navy, silver/platinum) | `task/tailwind-config` | ⏳ Not started |
-| Configure next.config.js (Ostendere CSP headers, all security headers, cdn.sanity.io remotePatterns, scrollRestoration: false) | `task/next-config` | ⏳ Not started |
-| Create base layout with LenisProvider and root fonts | `task/base-layout` | ⏳ Not started |
-| Commit .nvmrc and .env.example | `task/env-files` | ⏳ Not started |
-| Confirm .env.local is in .gitignore before first commit | `task/env-files` | ⏳ Not started |
-| Set all environment variables in Vercel dashboard (development, preview, production) | `task/vercel-env` | ⏳ Not started |
-| Initial commit — merge sprint-0 to main | `task/initial-commit` | ⏳ Not started |
+| Sanity schemas — Look, Service, About, SiteSettings — defined and deployed | `task/sanity-schemas` | ⏳ Not started |
+| Sanity Studio configuration and `npx sanity deploy` | `task/sanity-studio` | ⏳ Not started |
+| Lookbook grid with Sanity integration and category filter (suit / accessory / bespoke) | `task/lookbook` | ⏳ Not started |
+| Lightbox modal component — images and video loops | `task/lightbox` | ⏳ Not started |
+| About section — Daniel's story, craft, philosophy | `task/about` | ⏳ Not started |
+| Services section — bespoke, ready-to-wear, accessories | `task/services` | ⏳ Not started |
+| Contact section — enquiry form + Next.js API route email forwarding to `DANIEL_CONTACT_EMAIL` | `task/contact` | ⏳ Not started |
+| Contact form: Zod validation, rate limiting (3/IP/hour), honeypot field, timestamp check | `task/contact` | ⏳ Not started |
 
-### Sprint 0 Definition of Done
+### Sprint 2 Definition of Done
 
-- [ ] GitHub repository created with main as default branch
-- [ ] Vercel project linked to GitHub — auto-deploy on main confirmed
-- [ ] Staging environment configured on Vercel (staging branch)
-- [ ] Sanity project created — dataset: production
-- [ ] Sanity CORS origins locked — ostendere.com, staging.ostendere.com, localhost:3000 only
-- [ ] Daniel's email is the only Sanity project member
-- [ ] Next.js 16 scaffolded — TypeScript, Tailwind, ESLint, App Router, @/* alias
-- [ ] ApexSource standard stack installed and verified (`npm run build` passes)
-- [ ] npm audit passes — zero high or critical vulnerabilities
-- [ ] tailwind.config.js configured with Ostendere colour tokens (dark navy background, silver/platinum accent)
-- [ ] next.config.js configured (Ostendere CSP headers, full security headers, cdn.sanity.io remotePatterns, scrollRestoration: false)
-- [ ] Base layout created with LenisProvider and root fonts committed
-- [ ] .nvmrc committed (Node LTS version)
-- [ ] .env.local confirmed in .gitignore before first commit
-- [ ] .env.example committed with all Phase 1 variable names
-- [ ] All .claude/project/ documentation files complete — no [TODO] markers remaining
-- [ ] All Phase 1 environment variables set in Vercel dashboard (development, preview, production)
+- [ ] Sanity schemas (Look, Service, About, SiteSettings) defined and deployed
+- [ ] Sanity Studio deployed to studio.ostendere.com (or Vercel subdomain)
+- [ ] Lookbook grid renders Sanity content with category filter working
+- [ ] Lightbox modal opens on image/video click — closes on Escape and overlay click
+- [ ] About section — copy and layout complete, mobile-first
+- [ ] Services section — three service types, layout complete, mobile-first
+- [ ] Contact section — form submits, API route forwards email to `DANIEL_CONTACT_EMAIL`
+- [ ] Contact form: Zod validation passes on all inputs
+- [ ] Contact form: rate limiting blocks 4th submission within 1 hour per IP
+- [ ] Contact form: honeypot field present — bot submission returns 200, no email sent
+- [ ] Contact form: timestamp check present — submissions under 3 seconds rejected
+- [ ] `DANIEL_CONTACT_EMAIL` confirmed server-side only — not in client bundle
 - [ ] `npm run lint && npx tsc --noEmit && npm run build && npm audit` passes
-- [ ] Initial commit on main — Vercel production deployment succeeds
+- [ ] Vercel preview confirmed working — all sections visible, form submits correctly
 
 **Approved by Naa:** [ ]
 **Merged to main:** [ ]
@@ -65,40 +52,49 @@
 
 ## Sprint History
 
-> No completed sprints yet. Entries added here as sprints are merged to main.
+### ✅ Sprint 0 — Project Setup
+**Started:** 27/05/2026
+**Merged:** 27/05/2026
+
+- GitHub repository created with main as default branch
+- Vercel project linked to GitHub — auto-deploy on main confirmed
+- Staging and sprint-1 branches created
+- Next.js 16 scaffolded — TypeScript, Tailwind, ESLint, App Router, @/* alias
+- ApexSource standard stack installed (Framer Motion, Lenis, Tailwind Animate, Sanity, react-hook-form, zod, clsx, tailwind-merge, lucide-react, date-fns)
+- npm audit: 18 moderate CVEs in Sanity CLI tooling only — runtime-safe, accepted
+- tailwind.config.ts configured with Ostendere colour tokens (dark navy, silver, platinum, gold)
+- next.config.mjs configured (CSP headers, full security headers, cdn.sanity.io remotePatterns, scrollRestoration: false)
+- Base layout created with LenisProvider and root fonts committed
+- .nvmrc committed (Node 22.22.3 LTS)
+- .env.local confirmed in .gitignore
+- .env.example committed with all Phase 1 variable names
+- Sanity schemas (Look, Service, About, SiteSettings) scaffolded
+- Initial commit on main — Vercel production deployment confirmed
+
+### ✅ Sprint 1 — Three.js Hero and Navigation
+**Started:** 27/05/2026
+**Merged:** 28/05/2026
+
+- Lenis smooth scroll integration — manual RAF loop, duration 1.2s, anchors:true, LenisProvider wrapping app
+- GeistSans + Cormorant Garamond fonts configured via CSS variables
+- Three.js HeroScene built then dropped — BailoutToCSR trap with next/dynamic({ ssr: false }) in React 19; irrecoverable on Vercel production
+- HTML5 video hero replacing Three.js — WebM (VP9, 851KB) + MP4 fallback (H.264, 1.2MB), fixed fullscreen, dark overlay
+- CelticNavTrigger — Celtic compass SVG, CSS rotation animation (12s idle / 3s hover), fixed bottom-centre, full a11y
+- MenuOverlay — CSS clip-path reveal, staggered nav links, role="dialog", aria-modal
+- Hero section assembled: HeroVideo (Server Component) + HeroContent (Server Component, CSS animations) + HeroInteractive (Client Component, state only)
+- Framer Motion 12.40.0 removed from all public-facing components — deduped against @sanity/ui@3.2.0, incompatible with React 19 production hydration on Vercel; replaced with CSS keyframe animations in tailwind.config.ts
+- CSP updated: 'unsafe-inline' added to script-src for Next.js 16 Turbopack hydration (Sprint 3 nonce migration required before production launch)
+- Z-index stack resolved: video z-0, overlay z-[1] inside stacking context, content z-[2], menu z-40, Celtic trigger z-50
+- Body background set to transparent — video is the visual background; html retains #0a0d1a as pre-load fallback
+- 4 placeholder sections committed: #collection, #about, #services, #contact
+- `npm run lint && npx tsc --noEmit && npm run build && npm audit` — all clean
 
 ---
 
 ## Upcoming Sprints
 
-### ⏳ Sprint 1 — Three.js Hero and Navigation
-**Planned start:** 29/05/2026
-
-> Sprint 1 is complete only when the hero experience is exceptional — all components below
-> must work together perfectly before any Sprint 2 work begins. Do not rush past Sprint 1.
-
-Planned tasks:
-- [ ] Three.js dark navy hero scene (dynamically imported — `ssr: false`, never blocks LCP)
-- [ ] Lenis smooth scroll integration and LenisProvider confirmed working
-- [ ] Animated Celtic SVG nav trigger component (`CelticNavTrigger.tsx`)
-- [ ] Full-screen menu overlay with Framer Motion parallax reveal (`MenuOverlay.tsx`)
-- [ ] Hero section complete — Three.js scene, brand statement, and Celtic SVG trigger assembled
-
-### ⏳ Sprint 2 — Content, Lookbook, Sections, Contact
-**Planned start:** 12/06/2026 (approximately — after Sprint 1 review and Naa approval)
-
-Planned tasks:
-- [ ] Sanity schemas — Look, Service, About, SiteSettings — defined and deployed
-- [ ] Sanity Studio configuration and `npx sanity deploy`
-- [ ] Lookbook grid with Sanity integration and category filter (suit / accessory / bespoke)
-- [ ] Lightbox modal component — images and video loops
-- [ ] About section — Daniel's story, craft, philosophy
-- [ ] Services section — bespoke, ready-to-wear, accessories
-- [ ] Contact section — enquiry form + Next.js API route email forwarding to `DANIEL_CONTACT_EMAIL`
-- [ ] Contact form: Zod validation, rate limiting (3/IP/hour), honeypot field, timestamp check
-
 ### ⏳ Sprint 3 — Polish, SEO, Launch
-**Planned start:** 19/06/2026 (approximately — after Sprint 2 review and Naa approval)
+**Planned start:** 12/06/2026 (approximately — after Sprint 2 review and Naa approval)
 
 Planned tasks:
 - [ ] Animation refinement across all sections
@@ -129,22 +125,25 @@ Planned tasks:
 
 ## Do Not Touch During Current Sprint
 
-> Sprint 0 is infrastructure and setup only. No component files exist yet.
-> Once the base layout is committed in Sprint 0 it must not be modified until Sprint 1 begins.
-
-- `app/layout.tsx` — once committed in Sprint 0, do not modify until Sprint 1 begins
+- `app/layout.tsx` — LenisProvider and font configuration — do not modify during Sprint 2
+- `components/sections/HeroVideo.tsx` — video layer is correct; do not adjust z-index or background
+- `components/sections/HeroContent.tsx` — CSS animations are production-confirmed; do not reintroduce Framer Motion
+- `components/ui/CelticNavTrigger.tsx` — CSS rotation confirmed working; do not reintroduce Framer Motion
+- `components/ui/MenuOverlay.tsx` — CSS clip-path transition confirmed working; do not reintroduce Framer Motion
+- `next.config.mjs` — CSP headers are intentionally set; do not tighten script-src until Sprint 3 nonce migration
 
 ---
 
 ## Sprint Notes
 
 - Primary traffic source is Instagram — mobile-first is critical across every component
-- Three.js hero scene must be dynamically imported with `ssr: false` — this is a hard constraint for LCP
+- Framer Motion 12.40.0 is PERMANENTLY banned from public-facing components — deduped against @sanity/ui@3.2.0, breaks React 19 hydration on Vercel production. Use CSS animations only.
 - Navigation is Celtic SVG trigger + full-screen overlay — there is no traditional Navbar component
 - Daniel manages lookbook content independently via Sanity Studio — schemas must be simple and well-labelled
 - Domain purchase (ostendere.com) is a Sprint 3 task — ostendere.vercel.app is used for development, staging, and preview throughout Sprints 0–2
 - Phase 1 has no Supabase, Paystack, Resend, or auth — reject any code suggestion that introduces these
 - `DANIEL_CONTACT_EMAIL` is always server-side only — never `NEXT_PUBLIC_` prefix under any circumstances
+- CSP: 'unsafe-inline' in script-src is temporary — must be replaced with nonce-based middleware in Sprint 3 before production launch
 
 ---
 

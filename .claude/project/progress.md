@@ -129,6 +129,37 @@ Claude does this automatically — without being asked.
 - Diagnostic: 0 `BAILOUT_TO_CLIENT_SIDE_RENDERING` in SSR HTML — no BailoutToCSR
 - `opacity:0` instances in SSR HTML: expected Framer Motion initial-state SSR injection; client hydrates and animates correctly
 
+### Group 7 — Vercel Debugging, FM Removal, CSP Fix, Sprint Merge
+**Files modified:**
+- `components/sections/HeroContent.tsx` — Framer Motion removed entirely; promoted to pure Server Component; all animations replaced with Tailwind CSS keyframe classes (`animate-fade-up`, `animate-fade-up-delay`, `animate-scale-x`, `animate-fade-in`, `animate-scroll-pulse`); `motion-reduce:animate-none motion-reduce:opacity-100` on all animated elements
+- `components/ui/CelticNavTrigger.tsx` — `motion.svg` removed; CSS `animate-celtic-idle` / `hover:animate-celtic-fast` on plain `<svg>`; `[touch-action:manipulation]` added to button; open-state styles via plain className conditionals
+- `components/ui/MenuOverlay.tsx` — all Framer Motion removed (last remaining FM usage in public components); clip-path reveal via inline style (dynamic runtime value — allowed exception to no-inline-styles rule) + Tailwind `transition-[clip-path] duration-700`; nav link stagger via `transitionDelay` inline style (index-based); `pointer-events-none` when closed
+- `app/layout.tsx` — `bg-background` removed from body className; body is now transparent — video is the visual background
+- `app/globals.css` — `body { background-color: transparent }` confirmed; `html` retains `var(--background)` (#0a0d1a) as pre-load fallback
+- `tailwind.config.ts` — keyframes and animation utilities added: `fadeUp`, `fadeIn`, `scaleX`, `scrollPulse`, `celtic-spin`; animations: `fade-up`, `fade-up-delay`, `scale-x`, `fade-in`, `scroll-pulse`, `celtic-idle`, `celtic-fast`
+- `next.config.mjs` — CSP `script-src` updated: `'unsafe-inline' https://vercel.live` added; `connect-src` extended with `wss://ws-us3.pusher.com https://sockjs-us3.pusher.com` for Vercel Live; TODO comment added for Sprint 3 nonce migration
+- `.claude/project/known-issues.md` — CSP entry added (Sprint 1 entry; Sprint 3 nonce migration required)
+
+**Root cause — Framer Motion:**
+Framer Motion 12.40.0 is deduped from `@sanity/ui@3.2.0 → motion@12.40.0`. Downgrade blocked by peer constraint. FM 12.40.0 fails to hydrate on React 19 concurrent rendering in Vercel production builds — `useLayoutEffect` in FM never fires, leaving all animated elements at opacity:0 permanently. Click handlers in FM-wrapped components also fail to attach, causing full subtree hydration failure. Resolution: FM permanently removed from all public-facing components; CSS animations used everywhere.
+
+**Root cause — video invisible:**
+`[z-index:-2]` on `position: fixed` wrapper placed video below body background in CSS paint order. Fixed by setting wrapper to `z-0`, removing `bg-background` from body, making body transparent.
+
+**Root cause — CSP blocking hydration:**
+Next.js 16 Turbopack injects inline scripts during hydration. `script-src 'self'` blocked these, causing silent JavaScript failure. Fixed with `'unsafe-inline'`; nonce-based middleware required before production launch (Sprint 3).
+
+**Final z-index stack:** video `z-0` → overlay `z-[1]` (inside wrapper stacking context) → content/sections `z-[2]` → menu `z-40` → Celtic trigger `z-50`
+
+**Quality check results:**
+- `npx tsc --noEmit` — CLEAN (0 errors)
+- `eslint . --ext .ts,.tsx` — CLEAN (0 errors, 0 warnings)
+- `npm run build` — CLEAN (Turbopack, static /, all routes pass)
+- `npm audit` — 18 moderate (Sanity CLI tooling only, runtime-safe, unchanged)
+- Vercel preview confirmed: video visible, wordmark and brand statement animate in, Celtic trigger rotates, menu opens and closes, nav links navigate
+
+**Sprint 1 merged to main:** 28/05/2026 — commit `7d9c339`
+
 ---
 
 ## Sprint 2
