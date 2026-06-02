@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 
 export function Footer() {
   const [emailInput, setEmailInput] = useState('')
@@ -101,26 +102,51 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Main footer grid */}
-      <div
-        className="max-w-site mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10"
-        style={{ padding: 'clamp(60px,7vh,100px) clamp(24px,5vw,72px) 40px' }}
-      >
-        {/* Brand */}
+      {/* Main footer grid — Part B: Celtic watermark as background */}
+      <div className="relative overflow-hidden">
+        {/* Watermark: mark-cream.png centred, scales with breakpoint */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
+          aria-hidden="true"
+        >
+          <div className="relative w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px]">
+            <Image
+              src="/images/mark-cream.png"
+              alt=""
+              fill
+              className="object-contain"
+              style={{ opacity: 0.15 }}
+            />
+          </div>
+        </div>
+
+        <div
+          className="relative z-[1] max-w-site mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10"
+          style={{ padding: 'clamp(60px,7vh,100px) clamp(24px,5vw,72px) 40px' }}
+        >
+        {/* Brand — Part A: logo mark beside wordmark */}
         <div>
-          <p
-            className="mb-[18px]"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 600,
-              fontSize: 30,
-              letterSpacing: '0.42em',
-              color: '#ece3d2',
-            }}
-          >
-            <span style={{ fontWeight: 400 }}>OSTEN</span>
-            <span style={{ fontWeight: 700 }}>DERE</span>
-          </p>
+          <div className="flex items-center gap-3 mb-[18px]">
+            <Image
+              src="/images/mark-cream.png"
+              alt="Ostendere mark"
+              width={36}
+              height={36}
+              style={{ opacity: 0.85 }}
+            />
+            <span
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 600,
+                fontSize: 30,
+                letterSpacing: '0.42em',
+                color: '#ece3d2',
+              }}
+            >
+              <span style={{ fontWeight: 400 }}>OSTEN</span>
+              <span style={{ fontWeight: 700 }}>DERE</span>
+            </span>
+          </div>
           <p style={{ color: '#8a7d6b', maxWidth: '32ch', fontSize: 17 }}>
             Tailoring for the moment you are seen. Drafted by hand in Accra, fitted with precision.
           </p>
@@ -214,7 +240,8 @@ export function Footer() {
             </a>
           ))}
         </div>
-      </div>
+        </div>{/* end grid */}
+      </div>{/* end watermark wrapper */}
 
       {/* Watermark — C2: reduced clamp so text fits within 375px viewport */}
       <div
