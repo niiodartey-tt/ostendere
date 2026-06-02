@@ -8,7 +8,7 @@ const cspHeader = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://vercel.live",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' cdn.sanity.io data: blob:",
+  "img-src 'self' cdn.sanity.io images.unsplash.com plus.unsplash.com data: blob:",
   "media-src 'self' cdn.sanity.io",
   "connect-src 'self' api.sanity.io cdn.sanity.io wss://ws-us3.pusher.com https://sockjs-us3.pusher.com",
   "frame-ancestors 'none'",
@@ -41,6 +41,14 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "plus.unsplash.com",
       },
     ],
   },
