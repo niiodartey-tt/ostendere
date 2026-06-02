@@ -29,7 +29,7 @@ export function AboutSection() {
               style={{ aspectRatio: '4/5', background: '#2f231a' }}
             >
               <Image
-                src="/catalog/alpha/al_41.jpg"
+                src="/images/profile.jpg"
                 alt="Daniel Cofie, founder and head cutter of Ostendere, Accra"
                 fill
                 className="object-cover"
