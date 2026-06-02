@@ -1,73 +1,139 @@
 import Image from 'next/image'
 import { RevealOnScroll } from '@/components/ui/RevealOnScroll'
-import ParallaxBackground from '@/components/ui/ParallaxBackground'
+
+const STATS = [
+  { value: '2014',  label: 'Established' },
+  { value: '11/cm', label: 'Hand stitches' },
+  { value: '2',     label: 'Fittings minimum' },
+]
 
 export function AboutSection() {
   return (
     <>
-      <div className="w-full h-px bg-[rgba(192,192,192,0.2)]" aria-hidden="true" />
+      <div className="w-full h-px" style={{ background: 'rgba(236,227,210,0.08)' }} aria-hidden="true" />
 
       <section
         id="about"
         aria-labelledby="about-heading"
-        className="relative z-[2] bg-[#060810] px-4 py-24 sm:px-8 lg:px-16 lg:py-32"
+        className="panel-sticky grid place-items-center"
+        style={{ background: '#1c1611' }}
       >
-        <ParallaxBackground speed={0.15} className="mx-auto max-w-6xl flex flex-col md:flex-row gap-12 md:gap-16 lg:gap-24 items-start">
-
-          {/* Left — portrait image */}
-          <RevealOnScroll direction="left" className="w-full md:w-[55%] shrink-0">
-            <div className="relative w-full aspect-[4/3] md:aspect-auto md:h-[600px] border border-[rgba(192,192,192,0.15)]">
+        <div
+          className="relative z-[10] w-full max-w-site mx-auto grid grid-cols-1 md:grid-cols-[0.9fr_1.1fr] items-center gap-[clamp(40px,6vw,100px)]"
+          style={{ padding: 'clamp(60px,8vh,120px) clamp(24px,5vw,72px)' }}
+        >
+          {/* Portrait */}
+          <RevealOnScroll direction="left">
+            <div
+              className="relative overflow-hidden"
+              style={{ aspectRatio: '4/5', background: '#2f231a' }}
+            >
               <Image
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&auto=format&fit=crop"
-                alt="Daniel Cofie, founder and designer of Ostendere Premium Menswear, Accra"
+                src="/catalog/alpha/al_41.jpg"
+                alt="Daniel Cofie, founder and head cutter of Ostendere, Accra"
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, 55vw"
+                sizes="(max-width: 768px) 100vw, 45vw"
+                priority
               />
             </div>
           </RevealOnScroll>
 
-          {/* Right — copy */}
-          <RevealOnScroll delay={0.15} className="w-full md:w-[45%]">
-            <p className="mb-6 text-xs tracking-[0.4em] uppercase text-text-muted">
-              About the Designer
+          {/* Copy */}
+          <RevealOnScroll delay={0.08}>
+            <span
+              className="inline-flex items-center gap-3 mb-6"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                letterSpacing: '0.4em',
+                textTransform: 'uppercase',
+                color: '#c79a6b',
+              }}
+            >
+              <span className="block w-[34px] h-px bg-brass opacity-70" aria-hidden="true" />
+              09 — The Atelier
+            </span>
+
+            <blockquote
+              id="about-heading"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(28px,3.4vw,54px)',
+                lineHeight: 1.12,
+                fontWeight: 500,
+                color: '#ece3d2',
+                marginTop: 24,
+              }}
+            >
+              A suit should{' '}
+              <em style={{ fontStyle: 'italic', color: '#c79a6b' }}>arrive</em>{' '}
+              before you speak — and keep its silence after.
+            </blockquote>
+
+            <p
+              className="mt-7 max-w-[46ch]"
+              style={{ color: '#b9ac97', fontSize: 19 }}
+            >
+              Ostendere was founded in Accra — each garment drafted by hand, canvassed in horsehair, and finished over no fewer than two fittings. The house dresses men who would rather be remembered than noticed.
             </p>
 
-            <h2
-              id="about-heading"
-              className="font-display font-light text-[clamp(2rem,4vw,3.5rem)] tracking-wide text-[#E8E8E8] leading-tight"
+            <p
+              className="mt-[34px]"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontStyle: 'italic',
+                fontSize: 30,
+                color: '#ece3d2',
+              }}
             >
               Daniel Cofie
-            </h2>
+            </p>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.32em',
+                textTransform: 'uppercase',
+                color: '#8a7d6b',
+              }}
+            >
+              Founder &amp; Head Cutter
+            </span>
 
-            <div className="mt-6 mb-6 h-px w-15 bg-silver/40" aria-hidden="true" />
-
-            <div className="space-y-5 font-display text-sm leading-[2] text-text-secondary max-w-[480px]">
-              <p>
-                Daniel Cofie trained under some of West Africa&apos;s most rigorous master tailors before founding Ostendere in Accra. His work is shaped by a singular belief: that a well-made suit is not clothing — it is an argument for the man wearing it.
-              </p>
-              <p>
-                Every Ostendere garment begins with a conversation about the life it will be worn in. A board presentation in Accra, a wedding in London, a negotiation in Abuja. The suit must work as hard as the man who wears it. Precision is the only acceptable standard.
-              </p>
-              <p>
-                Ostendere serves the modern African gentleman who moves across continents without surrendering his identity. The craft is Ghanaian. The ambition is global. The result is a wardrobe that announces arrival without raising its voice.
-              </p>
-            </div>
-
-            <div className="mt-10 pt-8 border-t border-[rgba(192,192,192,0.1)]">
-              <p className="text-sm italic text-text-muted mb-3">
-                Every suit begins with a conversation.
-              </p>
-              <a
-                href="#contact"
-                className="text-xs tracking-widest uppercase text-silver hover:text-silver-light transition-colors duration-200"
-              >
-                Book a Consultation →
-              </a>
-            </div>
+            {/* Stats */}
+            <dl className="flex gap-12 mt-10 flex-wrap">
+              {STATS.map(({ value, label }) => (
+                <div key={label}>
+                  <dt
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 44,
+                      lineHeight: 1,
+                      color: '#ece3d2',
+                    }}
+                  >
+                    {value}
+                  </dt>
+                  <dd
+                    className="mt-2"
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 11,
+                      letterSpacing: '0.32em',
+                      textTransform: 'uppercase',
+                      color: '#8a7d6b',
+                    }}
+                  >
+                    {label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </RevealOnScroll>
+        </div>
 
-        </ParallaxBackground>
+        <div className="panel-cover" aria-hidden="true" />
       </section>
     </>
   )

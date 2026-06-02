@@ -10,8 +10,14 @@ const contactSchema = z.object({
     .optional()
     .or(z.literal(''))
     .transform((v) => v || undefined),
-  service: z.enum(['bespoke', 'ready-to-wear', 'accessories', 'general']),
-  message: z.string().min(10).max(2000).trim(),
+  occasion: z
+    .enum(['everyday', 'wedding', 'wardrobe', 'outerwear', 'general'])
+    .optional(),
+  /* legacy field kept for backwards-compat if old form submits */
+  service: z
+    .enum(['bespoke', 'ready-to-wear', 'accessories', 'general'])
+    .optional(),
+  message: z.string().max(2000).trim().optional().default(''),
   website: z.string().max(0).optional(),
   _timestamp: z.number().optional(),
 })
@@ -33,7 +39,6 @@ function checkRateLimit(ip: string): boolean {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  // Reject non-JSON content type
   const contentType = request.headers.get('content-type') ?? ''
   if (!contentType.includes('application/json')) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
@@ -41,7 +46,6 @@ export async function POST(request: Request): Promise<Response> {
 
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
 
-  // Rate limiting — 3 per IP per hour
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
   }
@@ -57,12 +61,12 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 
-  // Honeypot check — silent success for bots
+  /* honeypot — silent success for bots */
   if ('website' in body && (body as Record<string, unknown>).website) {
     return NextResponse.json({ success: true })
   }
 
-  // Timestamp check — silent success for submissions under 3 seconds
+  /* timestamp check — silent success for sub-3-second submissions */
   const ts = (body as Record<string, unknown>)._timestamp
   if (typeof ts === 'number' && Date.now() - ts < 3000) {
     return NextResponse.json({ success: true })
@@ -73,11 +77,12 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: 'Please check your submission and try again.' }, { status: 400 })
   }
 
-  const { name, service } = result.data
+  const { name, occasion, service } = result.data
+  const enquiryType = occasion ?? service ?? 'general'
 
   try {
     // TODO Phase 2: Replace with Resend email forwarding to DANIEL_CONTACT_EMAIL
-    console.log('Contact enquiry received', { name, service, submittedAt: new Date().toISOString() })
+    console.log('Bespoke enquiry received', { name, enquiryType, submittedAt: new Date().toISOString() })
 
     return NextResponse.json({ success: true })
   } catch {
