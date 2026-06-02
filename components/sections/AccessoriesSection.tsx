@@ -7,10 +7,8 @@ import { ACCESSORIES } from '@/lib/catalog-data'
 
 export function AccessoriesSection() {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
-  /* Issue 3 fix: hover previews image, click persists selection */
-  const displayIndex = hoverIndex !== null ? hoverIndex : activeIndex
+  const active = ACCESSORIES[activeIndex]
 
   return (
     <section
@@ -35,51 +33,51 @@ export function AccessoriesSection() {
           </RevealOnScroll>
           <RevealOnScroll delay={0.08}>
             <p style={{ fontSize: 'clamp(18px,1.5vw,22px)', color: '#b9ac97', maxWidth: '38ch', lineHeight: 1.5 }}>
-              Pins, chains and solid hardware, plus belts and braces. Hover to preview — click to select.
+              Pins, chains and solid hardware, plus belts and braces. Hover any item to view.
             </p>
           </RevealOnScroll>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-[clamp(24px,4vw,72px)] items-center">
-          {/* Stage */}
+          {/* Stage — single image, key remounts for fadeIn on change */}
           <RevealOnScroll direction="left">
-            <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', background: '#ece2d0' }} aria-hidden="true">
-              {ACCESSORIES.map((item, i) => (
-                <div
-                  key={item.id}
-                  className={`absolute inset-0 transition-[opacity,transform] duration-700 ${i === displayIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.04]'}`}
-                  style={{ transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' }}
-                >
-                  <Image src={item.img} alt={item.name} fill
-                    className="object-contain mix-blend-multiply"
-                    style={{ padding: '9%' }}
-                    sizes="(max-width: 768px) 100vw, 55vw"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-              <span className="absolute left-[22px] bottom-[22px] z-[3] px-[10px] py-[6px]"
+            <div
+              className="relative overflow-hidden"
+              style={{ aspectRatio: '4/5', background: '#ece2d0' }}
+              aria-hidden="true"
+            >
+              {active && (
+                <Image
+                  key={activeIndex}
+                  src={active.img}
+                  alt={active.name}
+                  fill
+                  className="object-contain mix-blend-multiply"
+                  style={{ padding: '9%', animation: 'fadeIn 0.3s ease both' }}
+                  sizes="(max-width: 768px) 100vw, 55vw"
+                  loading="lazy"
+                />
+              )}
+              <span
+                className="absolute left-[22px] bottom-[22px] z-[3] px-[10px] py-[6px]"
                 style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase',
                   color: '#1c1611', background: 'rgba(236,227,210,0.7)', backdropFilter: 'blur(2px)' }}
-                aria-hidden="true">
-                {ACCESSORIES[displayIndex]?.badge}
+              >
+                {active?.badge}
               </span>
             </div>
           </RevealOnScroll>
 
-          {/* List */}
+          {/* List — hover activates immediately */}
           <RevealOnScroll delay={0.08}>
             <ul className="flex flex-col" aria-label="Accessory categories">
               {ACCESSORIES.map((item, i) => (
                 <AccItem
                   key={item.id}
                   item={item}
-                  index={i}
                   isActive={i === activeIndex}
                   isLast={i === ACCESSORIES.length - 1}
-                  onHoverEnter={() => setHoverIndex(i)}
-                  onHoverLeave={() => setHoverIndex(null)}
-                  onClick={() => setActiveIndex(i)}
+                  onActivate={() => setActiveIndex(i)}
                 />
               ))}
             </ul>
