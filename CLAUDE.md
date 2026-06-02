@@ -45,8 +45,8 @@ These apply to every task, every session, every project. No exceptions.
 **Client:** Daniel Cofie
 **Domain:** ostendere.com (purchase — Sprint 0 task)
 **Stack:** Next.js 16 · TypeScript · Tailwind CSS · Framer Motion · Lenis · Sanity v5 · Vercel
-**Current sprint:** Sprint 0 — Project Setup
-**Active task:** Fill project documentation
+**Current sprint:** Sprint 3 — Polish, SEO, Security, Launch Prep
+**Active task:** Nonce-based CSP middleware (replace `unsafe-inline` in script-src)
 
 → Full details: `.claude/project/overview.md`
 → File structure: `.claude/project/structure.md`

@@ -162,7 +162,102 @@ Next.js 16 Turbopack injects inline scripts during hydration. `script-src 'self'
 
 ---
 
-## Sprint 2 — Content, Lookbook, Sections, Contact
+## Sprint 2 — Full Site Rebuild (Design File Implementation)
+**Branch:** `sprint-2` | **Merged to main:** 02/06/2026 | **Commit:** `65b2f6b`
+
+### Group A — Foundation
+
+**Files modified:** `tailwind.config.ts`, `app/layout.tsx`, `app/globals.css`
+
+- Palette switched from navy/silver to warm espresso (#1c1611) / cream (#ece3d2) / brass (#c79a6b) / coffee (#2f231a)
+- Added EB Garamond (body serif, `--font-serif`) and Jost (mono labels, `--font-mono`) via `next/font/google`
+- `globals.css` rewritten: new CSS custom properties, all keyframes added directly (scardIn, introEmblem, introGlow, introChar, introRule, introTag, pulse-brass, lightboxOpen, fadeIn, drop, scrub). Tailwind does not emit keyframes used only in inline `style={}` props — all must be in globals.css.
+- CSS utility classes: `.panel-sticky`, `.panel-cover`, `.panel-layer`, `.grade-overlay`, `.reveal`, `.scard-hidden`, `.scard-visible`, `.filter-bar`, `.hide-scrollbar`, `.reel-bar`, `.reel-wrap`
+
+### Group B — Asset Migration
+
+**177 files added to** `public/catalog/` and `public/images/` and `public/videos/grwm/`
+
+- 16 suit images, 11 package shots, 18 pocket squares, 7 watches, 12 alpha portraits, 15 pin/accessory photos
+- 4 GRWM videos (grwm1–4.mp4) — Daniel replaces with production footage in Sprint 3
+- Brand marks: mark-cream.png, mark-brass.png, emblem-cream.png
+- Founder portrait: profile.jpg (Daniel Cofie, used in About section)
+
+### Group C — Data Layer
+
+**File created:** `lib/catalog-data.ts`
+
+- Typed data for all product collections: SUITS (16), PACKAGES (4), POCKET_SQUARES (18), WATCHES (7), PINS (12), ACCESSORIES (5), GRWM_REELS (4)
+- All prices removed — "Contact for pricing" throughout. Ostendere is Ghana-based; no Euro/dollar values on site.
+
+### Group D — Navigation
+
+**Files created:** `components/sections/IntroOverlay.tsx`, `components/layout/Navbar.tsx`
+
+- IntroOverlay: letter-by-letter CSS animation, sessionStorage skip, skip button, prefers-reduced-motion bypass
+- Navbar: sticky with IntersectionObserver scroll-state; logo, desktop nav links (hidden below lg), "Book a Fitting" CTA; active section tracking via rootMargin '-20% 0px -70% 0px' on 10 sections; maps pins→accessories, watches→squares, lookbook/bespoke→about
+
+### Group E — Hero Update
+
+**Files modified:** `components/sections/HeroContent.tsx`, `components/sections/HeroVideo.tsx`
+
+- Emblem watermark (6% opacity), brass ambient glow, "Sartoria · Est. MMXIV / Accra — London" top labels
+- OSTEN (weight 400) + DERE (weight 700) split wordmark; brass drop-line scroll cue
+- Cinematic video grade matching design file
+
+### Group F — Product Sections (7 sections, 8 UI components)
+
+**Files created:** SuitsSection, PackagesSection, AccessoriesSection, PinDrawerSection, PocketSquaresSection, WatchesSection, GrwmSection (then split to GrwmReel.tsx), FilterBar, SuitCard, SuitQuickview, PackageModal, AccItem, WatchLightbox, PinLightbox, Toast
+
+- Suits: 16-item grid (grid-cols-1 mobile, sm:2, lg:4), colour filter bar, quickview modal with focus trap
+- Packages: 4-card grid, gallery modal with thumbnail strip
+- Accessories: hover+click image swap (AccItem with onMouseEnter + onClick), swatch circles
+- PinDrawer: ivory bg-[#ece3d0] hover:bg-white tiles, mix-blend-multiply images, caption slide-up, lightbox
+- PocketSquares: 18-item colour-filtered grid, lightbox with prev/next navigation through full POCKET_SQUARES array regardless of active filter
+- Watches: pointer-capture drag scroll rail, lightbox with navigation
+- GRWM: lazy-loaded via IntersectionObserver (preload="metadata"), touch play/pause, mobile play indicator
+
+**Critical fix:** Tailwind keyframes (scardIn etc.) not emitted if only used in inline `style={}` — moved all to globals.css
+
+### Group G — Narrative Stack
+
+**Files created/modified:** LookbookPanel.tsx, AboutSection.tsx (updated), BespokeSection.tsx, BespokeForm.tsx
+
+- LookbookPanel: full-bleed sticky parallax, disabled below 768px + prefers-reduced-motion, resize listener resets offset
+- AboutSection: profile.jpg portrait, quote, bio, signature, stats (2014/11cm/2 fittings)
+- BespokeForm: Zod + react-hook-form, occasion dropdown, preserved rate-limiting/honeypot/timestamp from API route
+
+### Group H — Footer
+
+**File created:** `components/layout/Footer.tsx`
+
+- Newsletter form, 4-column link grid (Atelier/Studio/Connect + brand)
+- OSTENDERE text watermark: clamp(48px,13vw,320px) — reduced from 70px to prevent 375px overflow
+- Celtic compass watermark: mark-cream.png centred at 15% opacity, scales w-[280px]→sm:w-[400px]→lg:w-[600px]
+- mark-cream.png logo beside wordmark in brand column
+- "We do not store your personal data" in bottom bar
+
+### Group I — Page Assembly
+
+**File modified:** `app/page.tsx`
+
+- Full section order: IntroOverlay → Navbar → Hero → Suits → Packages → Accessories → Pins → Squares → Watches → GRWM → panel-stack (Lookbook → About → Bespoke) → Footer
+
+### Mobile Audit + Fix Pass
+
+**17 issues fixed across 20 files** — full pass documented:
+
+**Critical (4):** No mobile hamburger → added MobileMenu.tsx (clip-path animation, focus trap); footer watermark overflow → clamp fixed; suit card info bar breakdown at 375px 2-col → grid-cols-1 mobile; hover-only accessories → onClick added to AccItem
+
+**Moderate (6):** FilterBar flex-wrap → flex-nowrap overflow-x-auto + .filter-bar CSS; packages CTA hover-only → opacity-100 on mobile; GRWM videos onMouseEnter-only → GrwmReel.tsx with onClick play/pause; parallax all devices → 768px guard; squares lightbox no close button → X button added; watch lightbox px-16 overflow → px-4 sm:px-8 lg:px-16
+
+**Minor (7):** skip button 44px, form inputs 45px, close buttons w-11 h-11, pin lightbox max-h-[65svh], GRWM copy fixed, reel title clamp, hero wordmark overflow safety
+
+**Build status at merge:** tsc --noEmit: 0 errors | npm run build: clean | npm audit: 0 high/critical | No Framer Motion imports
+
+---
+
+## Sprint 2 — Pre-Rebuild Groups (kept for historical record)
 
 ### Group 1 — Config, Data, Shared Utilities
 **Files created/modified:**

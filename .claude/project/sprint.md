@@ -8,41 +8,44 @@
 
 ## Current Sprint
 
-**Sprint:** Sprint 2 — Content, Lookbook, Sections, Contact
-**Started:** 28/05/2026
-**Target completion:** 11/06/2026
-**Branch:** `sprint-2`
-**Vercel preview:** [to be added once sprint-2 branch is deployed]
+**Sprint:** Sprint 3 — Polish, SEO, Security, Launch Prep
+**Started:** 02/06/2026
+**Target completion:** 25/06/2026
+**Branch:** `sprint-3` (to be created)
+**Vercel preview:** [to be added once sprint-3 branch is deployed]
 
 ### Active Tasks
 
 | Task | Branch | Status |
 |---|---|---|
-| Sanity schemas — Look, Service, About, SiteSettings — defined and deployed | `task/sanity-schemas` | ⏳ Not started |
-| Sanity Studio configuration and `npx sanity deploy` | `task/sanity-studio` | ⏳ Not started |
-| Lookbook grid with Sanity integration and category filter (suit / accessory / bespoke) | `task/lookbook` | ⏳ Not started |
-| Lightbox modal component — images and video loops | `task/lightbox` | ⏳ Not started |
-| About section — Daniel's story, craft, philosophy | `task/about` | ⏳ Not started |
-| Services section — bespoke, ready-to-wear, accessories | `task/services` | ⏳ Not started |
-| Contact section — enquiry form + Next.js API route email forwarding to `DANIEL_CONTACT_EMAIL` | `task/contact` | ⏳ Not started |
-| Contact form: Zod validation, rate limiting (3/IP/hour), honeypot field, timestamp check | `task/contact` | ⏳ Not started |
+| Nonce-based CSP middleware — replace `unsafe-inline` in script-src | `sprint-3` | 🔴 First task |
+| SEO metadata on all sections via Next.js Metadata API | `sprint-3` | ⏳ Not started |
+| Sitemap via next-sitemap | `sprint-3` | ⏳ Not started |
+| Core Web Vitals audit — all green on mobile | `sprint-3` | ⏳ Not started |
+| Security headers verified at securityheaders.com — A or A+ | `sprint-3` | ⏳ Not started |
+| Sanity Studio deploy + CORS origins locked | `sprint-3` | ⏳ Not started |
+| Contact form email forwarding via Resend to DANIEL_CONTACT_EMAIL | `sprint-3` | ⏳ Not started |
+| Domain registration — ostendere.com | `sprint-3` | ⏳ Not started |
+| Production deploy + DNS configuration | `sprint-3` | ⏳ Not started |
+| Client handoff walkthrough with Daniel | `sprint-3` | ⏳ Not started |
 
-### Sprint 2 Definition of Done
+### Sprint 3 Definition of Done
 
-- [ ] Sanity schemas (Look, Service, About, SiteSettings) defined and deployed
-- [ ] Sanity Studio deployed to studio.ostendere.com (or Vercel subdomain)
-- [ ] Lookbook grid renders Sanity content with category filter working
-- [ ] Lightbox modal opens on image/video click — closes on Escape and overlay click
-- [ ] About section — copy and layout complete, mobile-first
-- [ ] Services section — three service types, layout complete, mobile-first
-- [ ] Contact section — form submits, API route forwards email to `DANIEL_CONTACT_EMAIL`
-- [ ] Contact form: Zod validation passes on all inputs
-- [ ] Contact form: rate limiting blocks 4th submission within 1 hour per IP
-- [ ] Contact form: honeypot field present — bot submission returns 200, no email sent
-- [ ] Contact form: timestamp check present — submissions under 3 seconds rejected
-- [ ] `DANIEL_CONTACT_EMAIL` confirmed server-side only — not in client bundle
-- [ ] `npm run lint && npx tsc --noEmit && npm run build && npm audit` passes
-- [ ] Vercel preview confirmed working — all sections visible, form submits correctly
+- [ ] Nonce-based CSP middleware replacing `'unsafe-inline'` in script-src
+- [ ] Security headers A or A+ at securityheaders.com
+- [ ] `npm audit` — zero high or critical vulnerabilities
+- [ ] No secrets in git history: `git log --all --full-history -- .env*`
+- [ ] `DANIEL_CONTACT_EMAIL` not in client bundle
+- [ ] Contact form rate limiting tested — 4th submission blocked
+- [ ] Honeypot field tested — bot submission returns 200, no email
+- [ ] Malicious input validation tested (SQL, HTML, script tags)
+- [ ] Sanity CORS origins locked — no wildcard
+- [ ] Contact form email forwarding working to DANIEL_CONTACT_EMAIL
+- [ ] SEO metadata on all pages
+- [ ] Core Web Vitals green on pagespeed.web.dev mobile
+- [ ] ostendere.com domain registered and pointed to Vercel
+- [ ] Production deploy live
+- [ ] Daniel walkthrough and sign-off
 
 **Approved by Naa:** [ ]
 **Merged to main:** [ ]
@@ -71,6 +74,33 @@
 - Sanity schemas (Look, Service, About, SiteSettings) scaffolded
 - Initial commit on main — Vercel production deployment confirmed
 
+### ✅ Sprint 2 — Full Site Rebuild from Design File
+**Started:** 28/05/2026
+**Merged:** 02/06/2026
+
+- Full design implementation from OSTENDERE.html (claude.ai/design export)
+- Palette: warm espresso (#1c1611) / cream (#ece3d2) / brass (#c79a6b) — replaced navy/silver
+- Typography: EB Garamond (body) + Jost (mono labels) added via next/font alongside Cormorant
+- Intro overlay: letter-by-letter CSS animation, sessionStorage skip, reduced-motion bypass
+- Sticky navbar: IntersectionObserver active-section tracking, wordmark, CTA
+- Mobile hamburger: clip-path circle animation, focus trap, Escape close, all 6 nav links
+- Suits: 16-item filterable grid (colour filters) + quickview modal + inquiry toast
+- Packages: 4 editorial boxes + gallery modal with thumbnail strip
+- Accessories: hover/touch image swap (hoverIndex → activeIndex), swatch circles
+- Pin drawer: 12 ivory tiles with hover caption reveal + lightbox with prev/next nav
+- Pocket squares: 18-item colour-filtered grid + lightbox with prev/next + keyboard nav
+- Watches: drag-scroll rail (pointer capture) + lightbox with prev/next navigation
+- GRWM: 4 lazy-loaded video reels, IntersectionObserver load, touch play/pause
+- Lookbook panel: full-bleed sticky parallax (disabled below 768px + reduced-motion)
+- About: Daniel Cofie portrait (profile.jpg), quote, stats, bespoke type treatment
+- Bespoke form: Zod + react-hook-form, occasion dropdown, security features preserved
+- Footer: newsletter, 4-column links, Celtic compass watermark, OSTENDERE text mark
+- Scroll to top button: appears after 400px, 44px touch target
+- Full mobile audit: 4 critical + 6 moderate + 7 minor issues identified and fixed
+- 176 files changed; all catalog images + GRWM videos committed to public/
+- tsc --noEmit: 0 errors | npm build: clean | npm audit: 0 high/critical
+- No Framer Motion anywhere — CSS animations and IntersectionObserver throughout
+
 ### ✅ Sprint 1 — Three.js Hero and Navigation
 **Started:** 27/05/2026
 **Merged:** 28/05/2026
@@ -93,7 +123,7 @@
 
 ## Upcoming Sprints
 
-### ⏳ Sprint 3 — Polish, SEO, Launch
+### ⏳ Sprint 3 — Polish, SEO, Security, Launch Prep
 **Planned start:** 12/06/2026 (approximately — after Sprint 2 review and Naa approval)
 
 Planned tasks:
