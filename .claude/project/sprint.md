@@ -18,7 +18,8 @@
 
 | Task | Branch | Status |
 |---|---|---|
-| Nonce-based CSP middleware — replace `unsafe-inline` in script-src | `sprint-3` | 🔴 First task |
+| Nonce-based CSP middleware — replace `unsafe-inline` in script-src | `sprint-3` | ✅ Done — proxy.ts, merged to main 02/06/2026 |
+| Purchase ostendere.com domain — register and verify ownership | `sprint-3` | 🔴 Active task |
 | SEO metadata on all sections via Next.js Metadata API | `sprint-3` | ⏳ Not started |
 | Sitemap via next-sitemap | `sprint-3` | ⏳ Not started |
 | Core Web Vitals audit — all green on mobile | `sprint-3` | ⏳ Not started |
