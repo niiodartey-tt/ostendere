@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { Cormorant_Garamond, EB_Garamond, Jost } from 'next/font/google'
 import { LenisProvider } from '@/components/layout/LenisProvider'
+import { ScrollToTop } from '@/components/ui/ScrollToTop'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -51,6 +52,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <LenisProvider>{children}</LenisProvider>
+        <ScrollToTop />
       </body>
     </html>
   )
