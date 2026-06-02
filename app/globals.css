@@ -173,6 +173,15 @@ body.lightbox-open {
   display: none;
 }
 
+/* ── filter bar: horizontal scroll on mobile, no visible scrollbar ── */
+.filter-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── keyframes used via inline style (Tailwind won't emit these automatically) ── */
 @keyframes scardIn {
   to { opacity: 1; transform: none; }

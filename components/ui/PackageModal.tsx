@@ -81,7 +81,7 @@ export function PackageModal({ pkg, onClose, onInquire }: PackageModalProps) {
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="absolute top-4 right-4 z-[5] w-[42px] h-[42px] rounded-full grid place-items-center border transition-[background,transform] duration-300 hover:bg-brass hover:text-espresso hover:rotate-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass/60"
+          className="absolute top-4 right-4 z-[5] w-11 h-11 rounded-full grid place-items-center border transition-[background,transform] duration-300 hover:bg-brass hover:text-espresso hover:rotate-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass/60"
           style={{
             background: 'rgba(20,15,11,0.6)',
             borderColor: 'rgba(236,227,210,0.14)',

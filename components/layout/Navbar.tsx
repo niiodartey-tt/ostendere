@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { MobileMenu } from '@/components/layout/MobileMenu'
 
 const NAV_LINKS = [
   { label: 'Suiting',     href: '#suits' },
@@ -12,18 +13,10 @@ const NAV_LINKS = [
   { label: 'Atelier',     href: '#about' },
 ]
 
-/* Map every tracked section to its nearest nav link href */
 const SECTION_NAV_MAP: Record<string, string> = {
-  suits:       '#suits',
-  packages:    '#packages',
-  accessories: '#accessories',
-  pins:        '#accessories',
-  squares:     '#squares',
-  watches:     '#squares',
-  grwm:        '#grwm',
-  lookbook:    '#about',
-  about:       '#about',
-  bespoke:     '#about',
+  suits: '#suits', packages: '#packages', accessories: '#accessories',
+  pins: '#accessories', squares: '#squares', watches: '#squares',
+  grwm: '#grwm', lookbook: '#about', about: '#about', bespoke: '#about',
 }
 
 const SECTION_IDS = Object.keys(SECTION_NAV_MAP)
@@ -31,9 +24,9 @@ const SECTION_IDS = Object.keys(SECTION_NAV_MAP)
 export function Navbar() {
   const [stuck, setStuck] = useState(false)
   const [activeHref, setActiveHref] = useState('')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  /* Scroll-stuck state */
   useEffect(() => {
     const el = sentinelRef.current
     if (!el) return
@@ -45,14 +38,11 @@ export function Navbar() {
     return () => obs.disconnect()
   }, [])
 
-  /* Active section tracking — fires when a section enters the upper-middle viewport band */
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveHref(SECTION_NAV_MAP[entry.target.id] ?? '')
-          }
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveHref(SECTION_NAV_MAP[e.target.id] ?? '')
         })
       },
       { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
@@ -83,55 +73,68 @@ export function Navbar() {
           className="flex items-center gap-[14px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cream/40"
           aria-label="Ostendere home">
           <Image src="/images/mark-cream.png" alt="" width={34} height={34} className="w-auto h-[34px]" priority />
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 24, letterSpacing: '0.42em', paddingLeft: '0.42em', color: '#ece3d2' }}>
+          {/* Wordmark hidden below lg to prevent overflow with hamburger + CTA */}
+          <span className="hidden lg:inline"
+            style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 24, letterSpacing: '0.42em', paddingLeft: '0.42em', color: '#ece3d2' }}>
             <span style={{ fontWeight: 400 }}>OSTEN</span><span style={{ fontWeight: 700 }}>DERE</span>
           </span>
         </a>
 
-        {/* Nav links — hidden below lg (1024px) */}
+        {/* Desktop nav links */}
         <div className="hidden lg:flex items-center gap-[clamp(20px,2.4vw,44px)]">
           {NAV_LINKS.map(({ label, href }) => {
             const isActive = href === activeHref
             return (
-              <a
-                key={label}
-                href={href}
+              <a key={label} href={href}
                 className={cn(
                   'relative py-[6px] transition-colors duration-200',
                   'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cream/40',
-                  /* Active: brass colour + brass underline persisted */
                   isActive
                     ? 'text-brass border-b border-brass'
                     : 'border-b border-transparent hover:text-cream',
-                  /* Hover underline animation only when not already active */
-                  !isActive && [
-                    'after:absolute after:left-0 after:bottom-[-1px] after:h-px after:w-full after:bg-brass',
-                    'after:scale-x-0 after:origin-left after:transition-transform after:duration-[400ms]',
-                    'after:[transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:after:scale-x-100',
-                  ].join(' ')
+                  !isActive && 'after:absolute after:left-0 after:bottom-[-1px] after:h-px after:w-full after:bg-brass after:scale-x-0 after:origin-left after:transition-transform after:duration-[400ms] after:[transition-timing-function:cubic-bezier(0.22,1,0.36,1)] hover:after:scale-x-100'
                 )}
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  letterSpacing: '0.24em',
-                  textTransform: 'uppercase',
-                  color: isActive ? '#c79a6b' : '#b9ac97',
-                }}
-                aria-current={isActive ? 'true' : undefined}
-              >
+                style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.24em', textTransform: 'uppercase', color: isActive ? '#c79a6b' : '#b9ac97' }}
+                aria-current={isActive ? 'true' : undefined}>
                 {label}
               </a>
             )
           })}
         </div>
 
-        {/* CTA */}
-        <a href="#bespoke"
-          className="transition-[background] duration-[350ms] hover:bg-brass focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 min-h-[44px] flex items-center"
-          style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#1c1611', background: '#ece3d2', padding: '11px 20px' }}>
-          Book a Fitting
-        </a>
+        {/* Right side: CTA + hamburger */}
+        <div className="flex items-center gap-3">
+          <a href="#bespoke"
+            className="transition-[background] duration-[350ms] hover:bg-brass focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass/60 min-h-[44px] flex items-center"
+            style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#1c1611', background: '#ece3d2', padding: '11px 20px' }}>
+            Book a Fitting
+          </a>
+
+          {/* Hamburger — visible below lg only */}
+          <button
+            type="button"
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMenuOpen}
+            onClick={() => setIsMenuOpen((v) => !v)}
+            className="lg:hidden w-11 h-11 flex items-center justify-center text-cream focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cream/40 transition-colors duration-200 hover:text-brass"
+          >
+            {isMenuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            )}
+          </button>
+        </div>
       </nav>
+
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </>
   )
 }

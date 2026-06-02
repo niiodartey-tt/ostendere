@@ -99,6 +99,9 @@ export function HeroContent() {
             color: '#ece3d2',
             textTransform: 'uppercase',
             whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: '95vw',
           }}
         >
           <span style={{ fontWeight: 400 }}>OSTEN</span><span style={{ fontWeight: 700 }}>DERE</span>

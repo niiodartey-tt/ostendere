@@ -93,7 +93,8 @@ export function SuitsSection() {
           </RevealOnScroll>
 
           {/* Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[clamp(14px,1.4vw,24px)]">
+          {/* C3 Fix A: single column on mobile so suit cards have full width */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[clamp(14px,1.4vw,24px)]">
             {filtered.map((suit, i) => (
               <SuitCard key={suit.id} suit={suit} index={i} onOpen={(id) => {
                 const found = SUITS.find((s) => s.id === id) ?? null

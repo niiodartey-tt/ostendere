@@ -30,7 +30,7 @@ const inputStyle = {
   color: '#ece3d2',
   fontFamily: 'var(--font-serif)',
   fontSize: 19,
-  padding: '10px 0',
+  padding: '13px 0',
   width: '100%',
   outline: 'none',
   transition: 'border-color 0.4s cubic-bezier(0.22,1,0.36,1)',

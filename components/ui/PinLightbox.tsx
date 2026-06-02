@@ -79,11 +79,11 @@ export function PinLightbox({ selectedIndex, onClose, onPrev, onNext, hasPrev, h
         style={{ animation: 'lightboxOpen 0.3s cubic-bezier(0.22,1,0.36,1) both' }}
         key={selectedIndex}
       >
-        {/* Pure white tile — pin image uses mix-blend-mode:multiply */}
+        {/* Pure white tile — mix-blend-mode:multiply composites pin against white */}
         <div className="bg-white p-8">
           <div
-            className="relative w-full"
-            style={{ aspectRatio: '4/5', maxHeight: '65vh' }}
+            className="relative w-full max-h-[65svh] overflow-hidden"
+            style={{ aspectRatio: '4/5' }}
           >
             <Image
               key={selectedIndex}

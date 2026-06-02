@@ -24,6 +24,7 @@ export function AccItem({ item, isActive, isLast, onActivate }: AccItemProps) {
             : 'hover:pl-[18px] hover:border-l-2 hover:border-brass hover:bg-brass/[0.08]'
         )}
         onMouseEnter={onActivate}
+        onClick={onActivate}
         aria-current={isActive ? 'true' : undefined}
       >
         <span

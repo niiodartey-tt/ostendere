@@ -125,7 +125,7 @@ export function IntroOverlay() {
       <button
         type="button"
         onClick={skip}
-        className="absolute bottom-8 right-8 z-[3] flex items-center gap-2 bg-transparent border-none cursor-pointer transition-colors duration-300 hover:text-brass focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass/60"
+        className="absolute bottom-8 right-8 z-[3] flex items-center justify-end gap-2 min-w-[44px] min-h-[44px] px-2 bg-transparent border-none cursor-pointer transition-colors duration-300 hover:text-brass focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brass/60"
         style={{
           fontFamily: 'var(--font-mono)',
           fontSize: 10,

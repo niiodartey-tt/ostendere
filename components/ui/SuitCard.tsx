@@ -92,16 +92,16 @@ export function SuitCard({ suit, index, onOpen }: SuitCardProps) {
         </div>
       </div>
 
-      {/* Info bar */}
+      {/* Info bar — stacks on mobile to prevent overflow in 1-col grid */}
       <div
-        className="flex justify-between items-start gap-[10px] px-4 py-[16px] pb-[18px]"
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-[10px] px-4 py-[14px] pb-[16px]"
         style={{ background: '#2f231a' }}
       >
         <div>
           <div
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 19,
+              fontSize: 'clamp(15px,3vw,19px)',
               lineHeight: 1.05,
               color: '#ece3d2',
             }}
@@ -126,7 +126,6 @@ export function SuitCard({ suit, index, onOpen }: SuitCardProps) {
             fontFamily: 'var(--font-mono)',
             fontSize: 11,
             color: '#c79a6b',
-            whiteSpace: 'nowrap',
           }}
         >
           Contact for pricing

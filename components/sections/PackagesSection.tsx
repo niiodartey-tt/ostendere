@@ -128,8 +128,9 @@ export function PackagesSection() {
                     >
                       Contact for pricing
                     </div>
+                    {/* M2: always visible on mobile, hover-reveal on desktop */}
                     <div
-                      className="mt-[14px] inline-flex items-center gap-2 opacity-0 translate-y-2 transition-[opacity,transform] duration-[400ms] group-hover:opacity-100 group-hover:translate-y-0"
+                      className="mt-[14px] inline-flex items-center gap-2 opacity-100 sm:opacity-0 sm:translate-y-2 transition-[opacity,transform] duration-[400ms] sm:group-hover:opacity-100 sm:group-hover:translate-y-0"
                       style={{
                         fontFamily: 'var(--font-mono)',
                         fontSize: 10,

@@ -81,7 +81,7 @@ export function WatchLightbox({ selectedIndex, onClose, onPrev, onNext, hasPrev,
 
       {/* Image + info */}
       <div
-        className="relative z-[2] flex flex-col items-center px-16"
+        className="relative z-[2] flex flex-col items-center px-4 sm:px-8 lg:px-16"
         onClick={(e) => e.stopPropagation()}
         style={{ animation: 'lightboxOpen 0.3s cubic-bezier(0.22,1,0.36,1) both' }}
         key={selectedIndex}

@@ -216,12 +216,12 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Watermark */}
+      {/* Watermark — C2: reduced clamp so text fits within 375px viewport */}
       <div
-        className="text-center select-none"
+        className="text-center select-none overflow-hidden"
         style={{
           fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(70px,19vw,320px)',
+          fontSize: 'clamp(48px,13vw,320px)',
           lineHeight: 0.8,
           color: 'transparent',
           WebkitTextStroke: '1px rgba(236,227,210,0.1)',
