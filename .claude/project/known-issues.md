@@ -40,23 +40,32 @@ SPRINT:  Sprint N
 > Document every resolved bug here. Newest first.
 
 ---
-BUG:     CSP script-src 'unsafe-inline' added for development/staging — must be
-         replaced with nonce-based middleware CSP before Sprint 3 production launch
-CAUSE:   Next.js 16 Turbopack injects inline scripts during hydration. These scripts
-         were blocked by the strict "script-src 'self'" CSP, causing all JavaScript
-         to fail silently on Vercel preview. Hash-based approach is not viable because
-         Turbopack-generated inline script hashes change with every build.
-FIX:     Added 'unsafe-inline' and https://vercel.live to script-src temporarily.
-         Added wss://ws-us3.pusher.com and https://sockjs-us3.pusher.com to
-         connect-src for Vercel Live feedback websocket. This unblocks development
-         and staging. The site is not live on ostendere.com yet — risk is accepted
-         for Sprints 1–2 only.
-PREVENT: Sprint 3 task: implement nonce-based CSP middleware before production launch.
-         Next.js CSP nonce guide:
-         https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy
-         Never merge to main (production) with 'unsafe-inline' in script-src.
-DATE:    28/05/2026
-SPRINT:  Sprint 1
+BUG:     CSP script-src 'unsafe-inline' required — no nonce mechanism for inline
+         scripts injected by Next.js 16 Turbopack during hydration
+CAUSE:   Next.js 16 Turbopack injects inline scripts during hydration. These were
+         blocked by strict "script-src 'self'" CSP, causing silent JS failure on
+         Vercel preview. Hash-based approach not viable: Turbopack-generated inline
+         script hashes change with every build, making any committed hash stale.
+FIX (Sprint 1):  Added 'unsafe-inline' to script-src temporarily. Risk accepted for
+                 development/staging only — ostendere.com not yet live.
+FIX (Sprint 3):  Implemented nonce-based CSP via proxy.ts (Next.js 16 file convention).
+                 crypto.randomUUID() generates a fresh nonce per request (Edge-safe,
+                 no Buffer dependency). Middleware sets Content-Security-Policy with
+                 'nonce-{value}' + 'strict-dynamic' and passes nonce via x-nonce
+                 request header. Next.js App Router reads x-nonce and applies the
+                 nonce to its own generated inline <script> tags automatically.
+                 'unsafe-inline' removed from script-src entirely.
+                 style-src retains 'unsafe-inline' — required for React inline style={}
+                 attributes and Tailwind CSS injection. This is correct and acceptable.
+                 Added base-uri 'self' and object-src 'none' as bonus hardening.
+                 Vercel Live toolbar (https://vercel.live) preserved in non-prod via
+                 isProd guard on VERCEL_ENV. Verified: different nonce on each request;
+                 header nonce matches all script tag nonces in same response.
+PREVENT: 'unsafe-inline' must never appear in script-src on production.
+         style-src 'unsafe-inline' is intentional — do not remove without auditing
+         all inline React style props and Tailwind output first.
+DATE:    28/05/2026 (Sprint 1 workaround) / 02/06/2026 (Sprint 3 fix)
+SPRINT:  Sprint 1 → fully resolved Sprint 3
 ---
 
 ---
