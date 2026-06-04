@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 const CHARS = 'OSTENDERE'.split('')
@@ -16,40 +16,66 @@ const safeStorage = {
 
 export function IntroOverlay() {
   const [state, setState] = useState<'playing' | 'done'>('playing')
+  const hasStarted = useRef(false)
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (hasStarted.current) return
+    hasStarted.current = true
 
-    const seen = safeStorage.get('ost_intro_seen')
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setState('done')
+      return
+    }
 
-    if (seen || reduced) {
+    if (safeStorage.get('ost_intro_seen')) {
       setState('done')
       return
     }
 
     document.documentElement.style.overflow = 'hidden'
 
-    const t = setTimeout(() => {
-      setState('done')
-      document.documentElement.style.overflow = ''
-      safeStorage.set('ost_intro_seen', '1')
-    }, 3600)
-
-    return () => clearTimeout(t)
+    setTimeout(() => {
+      const el = overlayRef.current
+      if (el) {
+        el.style.transition = 'opacity 0.6s ease'
+        el.style.opacity = '0'
+        setTimeout(() => {
+          safeStorage.set('ost_intro_seen', '1')
+          document.documentElement.style.overflow = ''
+          setState('done')
+        }, 600)
+      } else {
+        safeStorage.set('ost_intro_seen', '1')
+        document.documentElement.style.overflow = ''
+        setState('done')
+      }
+    }, 5000)
   }, [])
 
   function skip() {
-    setState('done')
-    document.documentElement.style.overflow = ''
-    safeStorage.set('ost_intro_seen', '1')
+    const el = overlayRef.current
+    if (el) {
+      el.style.transition = 'opacity 0.4s ease'
+      el.style.opacity = '0'
+      setTimeout(() => {
+        safeStorage.set('ost_intro_seen', '1')
+        document.documentElement.style.overflow = ''
+        setState('done')
+      }, 400)
+    } else {
+      safeStorage.set('ost_intro_seen', '1')
+      document.documentElement.style.overflow = ''
+      setState('done')
+    }
   }
 
   if (state === 'done') return null
 
   return (
     <div
-      className="fixed inset-0 z-[1000] bg-espresso grid place-items-center overflow-hidden"
+      ref={overlayRef}
+      className="fixed inset-0 z-[1000] min-h-[100dvh] bg-espresso grid place-items-center overflow-hidden"
       aria-hidden="true"
     >
       {/* brass glow */}
@@ -58,15 +84,16 @@ export function IntroOverlay() {
         style={{
           background: 'radial-gradient(40vmax 40vmax at 50% 50%, rgba(199,154,107,0.14), transparent 70%)',
           animation: 'introGlow 2.6s cubic-bezier(0.22,1,0.36,1) 0.3s forwards',
+          animationPlayState: 'running',
         }}
       />
 
       {/* centre content */}
-      <div className="relative z-[2] text-center">
+      <div className="relative z-[2] text-center w-full px-4 sm:px-0">
         {/* mark emblem */}
         <div
           className="w-[clamp(70px,9vw,120px)] mx-auto mb-8 opacity-0"
-          style={{ animation: 'introEmblem 1.1s cubic-bezier(0.22,1,0.36,1) 0.15s forwards', transform: 'scale(0.6) rotate(-25deg)' }}
+          style={{ animation: 'introEmblem 1.1s cubic-bezier(0.22,1,0.36,1) 0.15s forwards', animationPlayState: 'running', transform: 'scale(0.6) rotate(-25deg)' }}
         >
           <Image
             src="/images/mark-cream.png"
@@ -85,7 +112,7 @@ export function IntroOverlay() {
           style={{
             fontFamily: 'var(--font-display)',
             fontWeight: 500,
-            fontSize: 'clamp(40px,9vw,132px)',
+            fontSize: 'clamp(2rem,8vw,6rem)',
             letterSpacing: '0.04em',
             lineHeight: 1,
             color: '#ece3d2',
@@ -101,6 +128,7 @@ export function IntroOverlay() {
                 transform: 'translateY(110%)',
                 animation: 'introChar 0.7s cubic-bezier(0.22,1,0.36,1) forwards',
                 animationDelay: `${0.9 + i * 0.08}s`,
+                animationPlayState: 'running',
               }}
             >
               {char}
@@ -111,7 +139,7 @@ export function IntroOverlay() {
         {/* brass rule */}
         <div
           className="h-px bg-brass mx-auto mt-6 mb-[18px] w-0"
-          style={{ animation: 'introRule 0.9s cubic-bezier(0.22,1,0.36,1) 1.7s forwards' }}
+          style={{ animation: 'introRule 0.9s cubic-bezier(0.22,1,0.36,1) 1.7s forwards', animationPlayState: 'running' }}
         />
 
         {/* tagline */}
@@ -124,6 +152,7 @@ export function IntroOverlay() {
             textTransform: 'uppercase',
             color: '#8a7d6b',
             animation: 'introTag 0.9s cubic-bezier(0.22,1,0.36,1) 2s forwards',
+            animationPlayState: 'running',
           }}
         >
           The Art of Being Seen
