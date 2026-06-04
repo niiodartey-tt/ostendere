@@ -341,8 +341,62 @@ Next.js 16 Turbopack injects inline scripts during hydration. `script-src 'self'
 
 ---
 
-## Sprint 3
-[Claude populates this during the sprint]
+## Sprint 3 — Polish, SEO, Security, Launch Prep
+**Branch:** `sprint-3` | **Partial merge to main:** 04/06/2026 | **Commit:** `4e92589`
+
+### Group A — CSP Nonce Middleware
+
+**Files created/modified:** `proxy.ts`, `app/layout.tsx`
+
+- `proxy.ts` — Next.js 16 proxy middleware (recognised as `proxy.ts`, not `middleware.ts`): per-request `crypto.randomUUID()` nonce, `strict-dynamic` for Turbopack chunk loading, `base-uri 'self'`, `object-src 'none'`, `unsafe-inline` removed from `script-src`. Sets `x-nonce` on request headers via `NextResponse.next({ request: { headers } })`.
+- `app/layout.tsx` — made `async`; imports `headers` from `next/headers`; reads `x-nonce`; passes `nonce={nonce}` to `<html>` so Next.js 16 stamps its generated hydration scripts with the same nonce. Route `/` changed from `○` (static) to `ƒ` (dynamic) — required for per-request nonce.
+- **Discovery:** Next.js 16 uses `proxy.ts` as the middleware filename. Creating `middleware.ts` caused a build error ("Both files detected"). Deleted `middleware.ts`; `proxy.ts` is correct and was already running.
+
+**Build:** tsc --noEmit: 0 errors | npm run build: clean
+
+### Group B — Intro Overlay: sessionStorage Crash Fix
+
+**Files modified:** `components/sections/IntroOverlay.tsx`
+
+- Wrapped all `sessionStorage` access in a `safeStorage` helper with `try/catch`. On iOS Safari Private Browsing and some Android WebViews, `sessionStorage` throws `SecurityError` — without the guard the `useEffect` aborted before registering the dismiss timer, leaving the overlay frozen permanently.
+- `safeStorage.get()` returns `null` on error; `safeStorage.set()` silently fails. Timer and skip button now always execute regardless of storage availability.
+
+**Build:** tsc --noEmit: 0 errors | npm run build: clean | Merged to main (commit `9178f0d` on sprint-3)
+
+### Group C — Intro Overlay: Strict Mode Double-Mount Fix
+
+**Files modified:** `components/sections/IntroOverlay.tsx`
+
+- Root cause: `return () => clearTimeout(t)` in the cleanup function killed the timer on React Strict Mode's simulated unmount (mount → unmount → remount). The second mount's timer was also eventually cancelled in some environments, leaving the overlay frozen.
+- Fix: `hasStarted = useRef(false)` guard. Effect bails immediately on second invocation. `setTimeout` not stored in a variable — no reference to cancel. Cleanup function removed entirely.
+- Removed temporary diagnostic `console.log` calls added during the investigation.
+
+**Build:** tsc --noEmit: 0 errors | npm run build: clean
+
+### Group D — Intro Overlay: Mobile Viewport & Animation Fixes
+
+**Files modified:** `components/sections/IntroOverlay.tsx`
+
+- `min-h-[100dvh]` on container — defensive guard for Android browsers that under-fill the visual viewport during address-bar transitions. Container already uses `fixed inset-0` (not `h-screen`) so no `100vh` bug, but `dvh` makes it explicit.
+- `w-full px-4 sm:px-0` on centre content div — constrains tagline and content to viewport width on narrow screens, preventing overflow clipping by parent `overflow-hidden`.
+- Wordmark `fontSize` changed from `clamp(40px,9vw,132px)` to `clamp(2rem,8vw,6rem)` — rem-based minimum for pixel-rounding safety; scales proportionally across breakpoints.
+- `animationPlayState: 'running'` added explicitly to all five animated elements (glow, emblem, each char span, rule, tagline) — prevents mobile browsers from suspending animations during viewport settle.
+
+**Build:** tsc --noEmit: 0 errors | npm run build: clean
+
+### Group E — Intro Overlay: Timer Extension + Fade-Out Transition
+
+**Files modified:** `components/sections/IntroOverlay.tsx`
+
+- Timer extended from 3 600 ms to **5 000 ms** — last animation ends at ~2 900 ms; previous 700 ms buffer was insufficient for slower mobile compositors. 5 000 ms provides 2 100 ms of headroom.
+- `overlayRef = useRef<HTMLDivElement>(null)` added; `ref={overlayRef}` on outer container div.
+- Auto-dismiss path: sets `transition: opacity 0.6s ease` → `opacity: 0` → waits 600 ms → cleans up and unmounts. Total visible duration: **5 600 ms**.
+- Skip path: same fade at 0.4 s. Total from tap to unmount: **400 ms**.
+- Both paths include null-ref fallback (instant dismiss) so overlay cannot get stuck.
+
+**Known issue (deferred):** On some slow Android devices, GPU compositor lag during address-bar hide can briefly suspend CSS animations even with `animationPlayState: 'running'`. Visible as slight truncation on first load. Post-launch polish item — not blocking production.
+
+**Build:** tsc --noEmit: 0 errors | npm run build: clean | Merged to main 04/06/2026 — commit `4e92589`
 
 ---
 

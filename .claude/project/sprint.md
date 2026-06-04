@@ -19,6 +19,11 @@
 | Task | Branch | Status |
 |---|---|---|
 | Nonce-based CSP middleware — replace `unsafe-inline` in script-src | `sprint-3` | ✅ Done — proxy.ts, merged to main 02/06/2026 |
+| layout.tsx: async, reads x-nonce, passes to `<html nonce>` | `sprint-3` | ✅ Done — merged to main 04/06/2026 |
+| Intro overlay: sessionStorage try/catch (iOS Private mode crash) | `sprint-3` | ✅ Done — merged to main 04/06/2026 |
+| Intro overlay: hasStarted.current guard (Strict Mode double-mount) | `sprint-3` | ✅ Done — merged to main 04/06/2026 |
+| Intro overlay: mobile viewport fixes (dvh, px-4, font clamp, play-state) | `sprint-3` | ✅ Done — merged to main 04/06/2026 |
+| Intro overlay: 5000ms timer + fade-out transition via overlayRef | `sprint-3` | ✅ Done — merged to main 04/06/2026 |
 | Purchase ostendere.com domain — register and verify ownership | `sprint-3` | 🔴 Active task |
 | SEO metadata on all sections via Next.js Metadata API | `sprint-3` | ⏳ Not started |
 | Sitemap via next-sitemap | `sprint-3` | ⏳ Not started |
@@ -49,8 +54,8 @@
 - [ ] Daniel walkthrough and sign-off
 
 **Approved by Naa:** [ ]
-**Merged to main:** [ ]
-**Merged date:** [to be filled]
+**Merged to main (CSP + intro fixes batch):** [x]
+**Merged date:** 04/06/2026 — commit 4e92589
 
 ---
 
@@ -174,7 +179,8 @@ Planned tasks:
 - Domain purchase (ostendere.com) is a Sprint 3 task — ostendere.vercel.app is used for development, staging, and preview throughout Sprints 0–2
 - Phase 1 has no Supabase, Paystack, Resend, or auth — reject any code suggestion that introduces these
 - `DANIEL_CONTACT_EMAIL` is always server-side only — never `NEXT_PUBLIC_` prefix under any circumstances
-- CSP: 'unsafe-inline' in script-src is temporary — must be replaced with nonce-based middleware in Sprint 3 before production launch
+- CSP: `unsafe-inline` in script-src has been replaced with nonce-based middleware (proxy.ts) — resolved Sprint 3, merged 04/06/2026
+- **Known issue — mobile intro animation:** On some slower Android devices the intro overlay animation may appear slightly truncated on first load despite the 5000ms timer. Cause: GPU compositor lag during address-bar hide transition can briefly suspend CSS animations. Deferred to post-launch polish — not a blocking issue for production.
 
 ---
 
