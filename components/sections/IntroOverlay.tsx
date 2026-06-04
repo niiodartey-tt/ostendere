@@ -17,6 +17,7 @@ const safeStorage = {
 export function IntroOverlay() {
   const [state, setState] = useState<'playing' | 'done'>('playing')
   const hasStarted = useRef(false)
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (hasStarted.current) return
@@ -35,22 +36,45 @@ export function IntroOverlay() {
     document.documentElement.style.overflow = 'hidden'
 
     setTimeout(() => {
-      safeStorage.set('ost_intro_seen', '1')
-      document.documentElement.style.overflow = ''
-      setState('done')
-    }, 3600)
+      const el = overlayRef.current
+      if (el) {
+        el.style.transition = 'opacity 0.6s ease'
+        el.style.opacity = '0'
+        setTimeout(() => {
+          safeStorage.set('ost_intro_seen', '1')
+          document.documentElement.style.overflow = ''
+          setState('done')
+        }, 600)
+      } else {
+        safeStorage.set('ost_intro_seen', '1')
+        document.documentElement.style.overflow = ''
+        setState('done')
+      }
+    }, 5000)
   }, [])
 
   function skip() {
-    setState('done')
-    document.documentElement.style.overflow = ''
-    safeStorage.set('ost_intro_seen', '1')
+    const el = overlayRef.current
+    if (el) {
+      el.style.transition = 'opacity 0.4s ease'
+      el.style.opacity = '0'
+      setTimeout(() => {
+        safeStorage.set('ost_intro_seen', '1')
+        document.documentElement.style.overflow = ''
+        setState('done')
+      }, 400)
+    } else {
+      safeStorage.set('ost_intro_seen', '1')
+      document.documentElement.style.overflow = ''
+      setState('done')
+    }
   }
 
   if (state === 'done') return null
 
   return (
     <div
+      ref={overlayRef}
       className="fixed inset-0 z-[1000] min-h-[100dvh] bg-espresso grid place-items-center overflow-hidden"
       aria-hidden="true"
     >
