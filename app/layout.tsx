@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { GeistSans } from 'geist/font/sans'
 import { Cormorant_Garamond, EB_Garamond, Jost } from 'next/font/google'
 import { LenisProvider } from '@/components/layout/LenisProvider'
@@ -34,14 +35,17 @@ export const metadata: Metadata = {
     'Premium menswear — bespoke suits, accessories and pocket squares by Daniel Cofie. Accra, Ghana.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const nonce = (await headers()).get('x-nonce') ?? ''
+
   return (
     <html
       lang="en"
+      nonce={nonce}
       className={`${GeistSans.variable} ${cormorant.variable} ${ebGaramond.variable} ${jost.variable}`}
     >
       <body className="bg-espresso text-cream antialiased overflow-x-hidden">
