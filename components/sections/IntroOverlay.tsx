@@ -5,13 +5,22 @@ import Image from 'next/image'
 const CHARS = 'OSTENDERE'.split('')
 const LIGHT_COUNT = 5
 
+const safeStorage = {
+  get: (key: string): string | null => {
+    try { return sessionStorage.getItem(key) } catch { return null }
+  },
+  set: (key: string, value: string): void => {
+    try { sessionStorage.setItem(key, value) } catch { /* silent fail */ }
+  },
+}
+
 export function IntroOverlay() {
   const [state, setState] = useState<'playing' | 'done'>('playing')
 
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    const seen = sessionStorage.getItem('ost_intro_seen')
+    const seen = safeStorage.get('ost_intro_seen')
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (seen || reduced) {
@@ -24,7 +33,7 @@ export function IntroOverlay() {
     const t = setTimeout(() => {
       setState('done')
       document.documentElement.style.overflow = ''
-      sessionStorage.setItem('ost_intro_seen', '1')
+      safeStorage.set('ost_intro_seen', '1')
     }, 3600)
 
     return () => clearTimeout(t)
@@ -33,7 +42,7 @@ export function IntroOverlay() {
   function skip() {
     setState('done')
     document.documentElement.style.overflow = ''
-    sessionStorage.setItem('ost_intro_seen', '1')
+    safeStorage.set('ost_intro_seen', '1')
   }
 
   if (state === 'done') return null
