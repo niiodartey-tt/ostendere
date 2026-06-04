@@ -18,6 +18,7 @@ export function IntroOverlay() {
   const [state, setState] = useState<'playing' | 'done'>('playing')
 
   useEffect(() => {
+    console.log('INTRO: mounted')
     if (typeof window === 'undefined') return
 
     const seen = safeStorage.get('ost_intro_seen')
@@ -31,6 +32,7 @@ export function IntroOverlay() {
     document.documentElement.style.overflow = 'hidden'
 
     const t = setTimeout(() => {
+      console.log('INTRO: timer fired, setting done')
       setState('done')
       document.documentElement.style.overflow = ''
       safeStorage.set('ost_intro_seen', '1')
@@ -45,7 +47,10 @@ export function IntroOverlay() {
     safeStorage.set('ost_intro_seen', '1')
   }
 
-  if (state === 'done') return null
+  if (state === 'done') {
+    console.log('INTRO: state is done, returning null')
+    return null
+  }
 
   return (
     <div
