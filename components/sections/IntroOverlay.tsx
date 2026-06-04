@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 const CHARS = 'OSTENDERE'.split('')
@@ -16,29 +16,29 @@ const safeStorage = {
 
 export function IntroOverlay() {
   const [state, setState] = useState<'playing' | 'done'>('playing')
+  const hasStarted = useRef(false)
 
   useEffect(() => {
-    console.log('INTRO: mounted')
-    if (typeof window === 'undefined') return
+    if (hasStarted.current) return
+    hasStarted.current = true
 
-    const seen = safeStorage.get('ost_intro_seen')
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setState('done')
+      return
+    }
 
-    if (seen || reduced) {
+    if (safeStorage.get('ost_intro_seen')) {
       setState('done')
       return
     }
 
     document.documentElement.style.overflow = 'hidden'
 
-    const t = setTimeout(() => {
-      console.log('INTRO: timer fired, setting done')
-      setState('done')
-      document.documentElement.style.overflow = ''
+    setTimeout(() => {
       safeStorage.set('ost_intro_seen', '1')
+      document.documentElement.style.overflow = ''
+      setState('done')
     }, 3600)
-
-    return () => clearTimeout(t)
   }, [])
 
   function skip() {
@@ -47,10 +47,7 @@ export function IntroOverlay() {
     safeStorage.set('ost_intro_seen', '1')
   }
 
-  if (state === 'done') {
-    console.log('INTRO: state is done, returning null')
-    return null
-  }
+  if (state === 'done') return null
 
   return (
     <div
